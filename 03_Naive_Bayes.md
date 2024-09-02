@@ -93,4 +93,10 @@ Do:
 - $MAP(Yes|sunny, cool, high, strong)$
 	- $=P(sunny, cool, high, strong|Yes)\times P(Yes)$
 	- $=P(sunny|Yes)\times P(cool|Yes)\times P(high|Yes)\times P(strong|Yes)\times P(Yes)$
-	- $=[]\times \dfrac{9}{14}$
+	- $=[\dfrac{2}{9}\times \dfrac{3}{9}\times \dfrac{3}{9}\times \dfrac{3}{9}]\times \dfrac{9}{14}$
+	- $=0.005291005291$
+- $MAP(NO|sunny,cool,high,strong)$
+	- $=P(sunny, cool, high, strong|No)\times P(No)$
+	- $=P(sunny|No)\times P(cool|No)\times P(high|No)\times P(strong|No)\times P(No)$
+	- $=[\dfrac{3}{5}\times \dfrac{1}{5}\times \dfrac{4}{5}\times \dfrac{3}{5}]\times\dfrac{5}{14}$
+	- $=0.02057142857$
