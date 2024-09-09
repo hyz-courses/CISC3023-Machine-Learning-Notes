@@ -35,7 +35,8 @@
 	- $P(H_i|E)=\dfrac{P(E|H_i)P(H_i)}{\sum_{k=1}^{m}{P(E|H_k)P(H_k)}}$
 - Multiple Evidence, Multiple Hypothesis:
 	- $P(H_i|E_1,E_2,...,E_n)=\dfrac{P(E_1,E_2,...,E_n)P(H_i)}{\sum_{k=1}^{m}{P(E_1,E_2,...,E_n|H_k)P(H_k)}}$
-	- $\approx\dfrac{P(E_1|H_i)\times P(E_2|H_i)\times ... \times P(E_n|H_i)}{\sum_{k=1}^{m}{[P(E_1|H_k)\times P(E_2|H_k)\times ...\times P(E_n|H_k)\times P(H_k)}]}$, if conditional independence holds.
+	- $\approx\dfrac{P(E_1|H_i)\times P(E_2|H_i)\times ... \times P(E_n|H_i)\times P(H_i)}{\sum_{k=1}^{m}{[P(E_1|H_k)\times P(E_2|H_k)\times ...\times P(E_n|H_k)\times P(H_k)}]}$, if conditional independence holds.
+	- $=\dfrac{P(H_i)\prod_{a=1}^{n}{P(E_a|H_i)}}{\sum_{k=1}^{m}{P(H_k)\prod_{b=1}^{n}P(E_b|H_k)}}$
 
 ## Example
 - Given the prior an conditional probs as follows:
@@ -51,16 +52,15 @@
 	- $P(E_3|H_3)P(H_3)=0.9 \times 0.25=0.36$
 	- $P(E_3)=P(E_3|H_1)P(H_1)\times P(E_3|H_2)P(H_2)\times P(E_3|H_3)P(H_3)$
 		- $=0.6\times 0.4+0.7\times 0.35+0.9\times 0.25=0.2838$
-		- 
 
-# 3.3 Naive Bayes Classifier
+# 3.3 Naïve Bayes Classifier
 ## 3.3.1 Maximum A Posteriori
 - $H_{conclusion}=argmax_{h\in H}P(h|E)$
 	- $=argmax_{h\in H}\dfrac{P(E|h)P(h)}{P(E)}$
 	- $=argmax_{h\in H}P(E|h)P(h)$
 - Omit the $P(E)$ since it's constant, which is independent from the hypothesis.
 
-## 3.3.2 Naive Bayes Estimation
+## 3.3.2 Naïve Bayes Estimation
 - Given:
 	- A conjunctive test sample: $x_1,x_2,...,x_n$
 - $c_{MAP}=argmax_{c_j\in C}P(c_j|x_1,x_2,...x_n)$
@@ -69,7 +69,7 @@
 	- $=argmax_{c_j\in C}[P(x_1|c_j)\times P(x_2|c_j)\times ... \times P(x_n|c_j)]\times P(c_j)$
 	- $=argmax_{c_j\in C}P(c_j)\times \prod_{k=1}^{n}P(x_k|c_j)$
 
-## Example
+### Example
 | Day | Outlook  | Temp | Humitity |  Wind  | Play Tennis |
 | :-: | :------: | :--: | :------: | :----: | :---------: |
 |  1  |  Sunny   | Hot  |   High   |  Weak  |   **No**    |
@@ -100,3 +100,22 @@ Do:
 	- $=P(sunny|No)\times P(cool|No)\times P(high|No)\times P(strong|No)\times P(No)$
 	- $=[\dfrac{3}{5}\times \dfrac{1}{5}\times \dfrac{4}{5}\times \dfrac{3}{5}]\times\dfrac{5}{14}$
 	- $=0.02057142857$
+
+## 3.2.3 Add-1 Smoothing
+Initially, we have:
+$$c_{target}=argmax_{c_j\in C}[P(c_j)\prod_{i=1}^{n}P(x_i|c_j)]$$
+We could observe that:
+$$P(x_i|c_j)=\dfrac{\#(x\in c_j, x=x_i)}{\#(x\in c_j)}=\dfrac{n_c}{n}$$
+where the number of $x$ that's in class $c_j$ could be $0$, yielding $P(x_i|c_j)$ to be $0$. 
+
+What's worse, if $P(x_i|c_{j_{1}})$ becomes $0$ for $j_1$, even if $P(x_i|c_{j_{2}})$ is very large for $j_2$, the entire $MAP=P(c_j)\prod_{i=1}^{n}P(x_i|c_j)$ would be still cast to $0$.
+
+Resolution: Add-1 smoothing.
+
+## 3.2.4 Continuous $x$
+Observations may be continuous. Use Gaussian Distribution instead.
+$$P(x_i|c_j)={\dfrac{1}{\sigma_{ik}\sqrt{2\pi}}e}^{\dfrac{-(x_i-\mu_{ik})^2}{2\sigma_{ik}^{2}}}=Gaussian(x_i, \mu_{ik}, \sigma_{ik})$$
+That is, for a specific class $c_j$, extract all the values $x_i\in c_j$ and form a normal distribution. This determines two variables:
+- $\sigma$, the standard deviation
+- $\mu$, the mean/expectation
+After the two variables are set, the probability $P(x_i|c_j)$ can be thus calculated.
