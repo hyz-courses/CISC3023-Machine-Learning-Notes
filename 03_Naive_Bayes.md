@@ -111,6 +111,8 @@ where the number of $x$ that's in class $c_j$ could be $0$, yielding $P(x_i|c_j)
 What's worse, if $P(x_i|c_{j_{1}})$ becomes $0$ for $j_1$, even if $P(x_i|c_{j_{2}})$ is very large for $j_2$, the entire $MAP=P(c_j)\prod_{i=1}^{n}P(x_i|c_j)$ would be still cast to $0$.
 
 Resolution: Add-1 smoothing.
+- Prior: $P(c_j)=\dfrac{(\#.c\in C \land c=c_j )+ m\times p}{(\#.c\in C) + m}$, where $m \in \mathbb{R}^+$ and $p\in[0,1]$
+- Evidence: $P(x_i|c_j)=\dfrac{(\#. x_i \in c_j) + m \times p}{(\#. c_j) + m}$
 
 ## 3.2.4 Continuous $x$
 Observations may be continuous. Use Gaussian Distribution instead.
