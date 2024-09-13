@@ -119,5 +119,7 @@ Observations may be continuous. Use Gaussian Distribution instead.
 $$P(x_i|c_j)={\dfrac{1}{\sigma_{ik}\sqrt{2\pi}}e}^{\dfrac{-(x_i-\mu_{ik})^2}{2\sigma_{ik}^{2}}}=Gaussian(x_i, \mu_{ik}, \sigma_{ik})$$
 That is, for a specific class $c_j$, extract all the values $x_i\in c_j$ and form a normal distribution. This determines two variables:
 - $\sigma$, the standard deviation
+	- $\sigma=\dfrac{1}{n}\sum_{i=1}^{n}$
 - $\mu$, the mean/expectation
+	- $\mu=\dfrac{1}{n}\sum_{i=1}^{n}x_i$
 After the two variables are set, the probability $P(x_i|c_j)$ can be thus calculated.
