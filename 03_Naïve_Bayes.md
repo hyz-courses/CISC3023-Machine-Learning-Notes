@@ -1,4 +1,4 @@
-# 3.0 Why Naive Bayes?
+# 3.0 Why Naïve Bayes?
 - Uncertainty
 	- Can't conclude something with 100% confidence
 - Weak Implications
@@ -111,15 +111,15 @@ where the number of $x$ that's in class $c_j$ could be $0$, yielding $P(x_i|c_j)
 What's worse, if $P(x_i|c_{j_{1}})$ becomes $0$ for $j_1$, even if $P(x_i|c_{j_{2}})$ is very large for $j_2$, the entire $MAP=P(c_j)\prod_{i=1}^{n}P(x_i|c_j)$ would be still cast to $0$.
 
 Resolution: Add-1 smoothing.
-- Prior: $P(c_j)=\dfrac{(\#.c\in C \land c=c_j )+ m\times p}{(\#.c\in C) + m}$, where $m \in \mathbb{R}^+$ and $p\in[0,1]$
-- Evidence: $P(x_i|c_j)=\dfrac{(\#. x_i \in c_j) + m \times p}{(\#. c_j) + m}$
+- Prior: $P(c_j)=\dfrac{(\#.c\in C \land c=c_j )+ m_{prior}\times p_{prior}}{(\#.c\in C) + m_{prior}}$, where $m \in \mathbb{R}^+$ and $p\in[0,1]$
+- Evidence: $P(x_i|c_j)=\dfrac{(\#. x_i \in c_j) + m_{evid} \times p_{evid}}{(\#. c_j) + m_{evid}}$
 
 ## 3.2.4 Continuous $x$
 Observations may be continuous. Use Gaussian Distribution instead.
 $$P(x_i|c_j)={\dfrac{1}{\sigma_{ik}\sqrt{2\pi}}e}^{\dfrac{-(x_i-\mu_{ik})^2}{2\sigma_{ik}^{2}}}=Gaussian(x_i, \mu_{ik}, \sigma_{ik})$$
 That is, for a specific class $c_j$, extract all the values $x_i\in c_j$ and form a normal distribution. This determines two variables:
 - $\sigma$, the standard deviation
-	- $\sigma=\dfrac{1}{n}\sum_{i=1}^{n}$
+	- $\sigma=\sqrt{\dfrac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}$
 - $\mu$, the mean/expectation
 	- $\mu=\dfrac{1}{n}\sum_{i=1}^{n}x_i$
 After the two variables are set, the probability $P(x_i|c_j)$ can be thus calculated.
