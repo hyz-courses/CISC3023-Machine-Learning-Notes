@@ -1,4 +1,4 @@
-# 5.2 Entropy
+# 5.2 Symbolized Decision Tree
 ## 5.2.1 Attributes & Purity of Decision
 - We want to know which attribute is the best classifier.
 - Each attribute can be represented as a node, splitting test sample into 2 classes (in the binary case)
@@ -11,7 +11,7 @@
 	- $Entropy(S)=-p_+\log_2p_+-p_-\log_2p_-$
 - The higher the entropy, the fewer the information the sample contains.
 	- High Entropy = More Messy, Lower Entropy = Less Messy 
-	-  ![[Pasted image 20240919082416.png]]
+	-  ![[2-Split Entropy.png]]
 	- $f(p)=-p\log_2p-(1-p)\log_2(1-p)$
 
 **[Prop] Entropy 熵的性质**
@@ -89,3 +89,29 @@ Do:
 	- $Gain(S)=Entropy(S)-\sum_{i\in\{1,2\}}\dfrac{|S_i|}{|S|}Entropy(S_i)$
 	- $=0.8905-(\dfrac{7}{13}\times0.9852+\dfrac{6}{13}\times0.6500)$
 	- $=0.0600$
+
+# 5.3 CART
+Classification and Regression Tree
+A binary tree that can handle numeric inputs and outputs.
+
+## 5.3.1 Gini Index 基尼指数
+For a split $S_i$ from collection $S$ that has results with $m$ labels:
+- $|S_i|=x_{i1}+x_{i2}+\cdots+x_{im}$
+
+The Gini Index of this split is:
+- $Gini(S)=1-\sum_{j=1}^{m}{(p_{ij})}^2$
+	- $=1-\sum_{j=1}^{m}(\dfrac{x_{ij}}{x_{i1}+x_{i2}+\cdots+x_{im}})^2$
+	- $=1-\dfrac{\sum_{j=1}^{m}x_{ij}^2}{|S_i|^2}$
+
+Reaches maximum when $p_{ij}=\dfrac{1}{m}$
+- $Gini(S)_{max}=1-m\times(\dfrac{1}{m})^2=1-\dfrac{1}{m}$
+- For a binary case, $Gini(S)_{max}=\dfrac{1}{2}$
+![[2-Split Gini Index.png]]
+## 5.3.2 Classification Tree (CT)
+**Choose A split point $\alpha$**
+- To decide the splitting of a continuous node, we need to find the best splitting point that gives an optimized split.
+- Sort the continuous value, find the $\alpha$ that gives the lowest entropy, i.e., purity.
+### Over Fitting
+## 5.3.3 Regression Tree (RT)
+Minimize $\sum (x-\bar{x})^2$
+### Regression Problem
