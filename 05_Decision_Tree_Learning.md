@@ -1,9 +1,43 @@
+# 5.1 Introduction
+## 5.1.1 A sample decision tree
+```mermaid
+flowchart TD
+A[Outlook] --Sunny--> B[Humidity]
+A --Overcast--> C([Yes])
+A --Rain--> D[Wind]
+B --High--> E([No])
+B --Normal--> F([Yes])
+D --Strong--> G([No])
+D --Weak--> H([Yes])
+```
+## 5.1.2 Properties of Decision Tree Learning
+- Decision Tree Learning is a method for approximating discrete-valued functions that is
+	- Robust to noisy data and
+	- can learn disjunctive expressions
+- The learned function is represented by a decision tree.
+	- which can be also represented by a set of if-then rules
+- In General
+	- Decision Trees represent a **disjoint** of conjunctions of constraints on the attribute value of instance.
+		- disjoint = a set of $\lor$
+	- Each path from the tree from root to a leaf is a **conjunction** of attribute sets.
+		- conjunction = a set of $\land$
+		- $e.g.,$ The path $Outlook\rightarrow Humidity\rightarrow No$ stands for $Outlook=Sunny \land Humidity=High \rightarrow No$
+
+## 5.1.3 Appropriate Problems for DT
+1. Instances describable by attribute-value pairs.
+	1. e.g., Temperature=Hot, Humidity=High, etc.
+2. Target function has discrete output values.
+	1. e.g., Yes/No, Is Owner/Not owner, etc.
+3. Disjunctive hypothesis may be required.
+	1. That is, the hypothesis is in the format of "xxx or xxx or xxx...."
+4. Possibly noisy training data.
+5. Missing attribute values in training data.
+
 # 5.2 Symbolized Decision Tree
 ## 5.2.1 Attributes & Purity of Decision
 - We want to know which attribute is the best classifier.
 - Each attribute can be represented as a node, splitting test sample into 2 classes (in the binary case)
 - The *purer* the splitting, the better the decision.
-
 ## 5.2.2 Entropy 熵
 **[DEF] Entropy 熵**
 - Given **a split** from collection $S$ with **portions** of both positive and negative $p_+, p_-$, 
@@ -91,8 +125,10 @@ Do:
 	- $=0.0600$
 
 # 5.3 CART
-Classification and Regression Tree
-A binary tree that can handle numeric inputs and outputs.
+
+### 5.3.0 What is CART?
+- Classification and Regression Tree
+- A binary tree that can handle numeric inputs and outputs.
 
 ## 5.3.1 Gini Index 基尼指数
 For a split $S_i$ from collection $S$ that has results with $m$ labels:
@@ -108,10 +144,136 @@ Reaches maximum when $p_{ij}=\dfrac{1}{m}$
 - For a binary case, $Gini(S)_{max}=\dfrac{1}{2}$
 ![[2-Split Gini Index.png]]
 ## 5.3.2 Classification Tree (CT)
-**Choose A split point $\alpha$**
-- To decide the splitting of a continuous node, we need to find the best splitting point that gives an optimized split.
-- Sort the continuous value, find the $\alpha$ that gives the lowest entropy, i.e., purity.
-### Over Fitting
+### How to split continuous variable?
+- Sort the continuous variable.
+- Find all separation points that separates the continuous variable into lower and higher parts.
+- Select the separation point $\alpha$ that gives the best purity.
+
+### How to split categorical variable?
+- Examine all possible ways in which the categories can be split.
+- For example, for each possible category $A$, $B$$ and C$, it could be split 3 ways:
+	- $A$ and $BC$
+	- $B$ and $AC$
+	- $C$ and $AB$
+- Find the split that gives the best purity.
+
+### E(5.3.2) Example
+Classify if an email is spam or not.
+
+| Word Count (Numeric) | Sender's Email | Contain word "Free" | Spam |
+| -------------------- | -------------- | ------------------- | ---- |
+| 100                  | Edu            | Yes                 | Yes  |
+| 200                  | Com            | Yes                 | No   |
+| 800                  | Edu            | Yes                 | No   |
+| 60                   | Org            | No                  | Yes  |
+| 40                   | Edu            | No                  | Yes  |
+| 300                  | Org            | No                  | Yes  |
+| 300                  | Edu            | Yes                 | No   |
+| 300                  | Com            | Yes                 | No   |
+#### E(5.3.2)-1 Word Count (Numerical)
+**1. Sort the word count.**
+`40, 60, 100, 200, 300, 300, 300, 800`
+`Y,  Y,   Y,   N,   Y,   N,   N,   N`
+
+**2. Find $\alpha$**
+Entropy Before Split:
+$E=-\dfrac{4}{8}\log_2{\dfrac{4}{8}}-\dfrac{4}{8}\log_2{\dfrac{4}{8}}=1$
+
+Entropy After Split for each separation points:
+- `40|60`, $\alpha=\dfrac{40+60}{2}=50$.
+	- $<50$:  $+:1$, $-:0$,    $E_{x<50}= -1\log_2{1}-0\log_2{0} = 0$
+	- $>50$:  $+:3$, $-:4$,    $E_{x>50}=-\dfrac{3}{7}\log_2{\dfrac{3}{7}}-\dfrac{4}{7}\log_2{\dfrac{4}{7}}=0.9852$
+	- $IG_{\alpha=50}=1-(\dfrac{1}{8}\times0+\dfrac{7}{8}\times0.9852)=0.13795$
+
+- `60|100`, $\alpha=\dfrac{60+100}{2}=80$.
+	- $<80$:  $+:2$, $-:0$    $E_{x<80}= -1\log_2{1}-0\log_2{0} = 0$
+	- $>80$:  $+:2$, $-:4$    $E_{x>80}= -\dfrac{2}{6}\log_2{\dfrac{2}{6}}-\dfrac{4}{6}\log_2{\dfrac{4}{6}} = 0.9183$
+	- $IG_{\alpha=80}=1-(\dfrac{2}{8}\times0+\dfrac{6}{8}\times0.9183)=0.311275$
+
+- `100|200`, $\alpha=\dfrac{100+200}{2}=150$.
+	- $<150$:  $+:3$, $-:0$     $E_{x<150}= -1\log_2{1}-0\log_2{0} = 0$
+	- $>150$:  $+:1$, $-:4$     $E_{x>150}= -\dfrac{1}{5}\log_2{\dfrac{1}{5}}-\dfrac{4}{5}\log_2{\dfrac{4}{5}} = 0.7219$
+	- $IG_{\alpha=150}=1-(\dfrac{3}{8}\times0+\dfrac{5}{8}\times0.7219)=0.5488125$
+
+- `200|300`, $\alpha=\dfrac{200+300}{2}=250$.
+	- $<250$:  $+:3$, $-:1$   $E_{x<250}= -\dfrac{3}{4}\log_2{-\dfrac{3}{4}}-\dfrac{1}{4}\log_2{\dfrac{1}{4}} = 0.8113$
+	- $>250$:  $+:1$, $-:3$   $E_{x>250}= -\dfrac{1}{4}\log_2{\dfrac{1}{4}}  -\dfrac{3}{4}\log_2{-\dfrac{3}{4}}= 0.8113$
+	- $IG_{\alpha=250}=1-(\dfrac{4}{8}\times0.8113+\dfrac{4}{8}\times0.8113)=0.1887$
+
+- `300|800`, $\alpha=\dfrac{300+800}{2}=550$.
+	- $<550$:  $+:4$, $-:3$   $E_{x<550}= -\dfrac{4}{7}\log_2{-\dfrac{4}{7}}-\dfrac{3}{7}\log_2{\dfrac{3}{7}} = 0.9852$
+	- $>550$:  $+:0$, $-:1$   $E_{x>550}= -0\log_2{0}-1\log_2{1} = 0$
+	-  $IG_{\alpha=550}=1-(\dfrac{7}{8}\times0.9852+\dfrac{1}{8}\times0)=0.13795$
+
+
+We can see that $\alpha=80$ that separates $60$ and $100$ gives the best split. Therefore, for the node $Word \ Count$, we choose $\alpha=80$, and $IG=0.5488125$ as the Information Gain of the root node.
+#### E(5.3.2)-2 Sender's Email (Categorical)
+Find all the possible splits.
+$\{Edu\}: +:2, -:2$
+$\{Com\}:  +:0, -:2$
+$\{Org\}:  +: 2, -:0$
+
+1. $\{Edu\}\cup\{Com, Org\}$
+	1. $\{Edu\}$:  $+:2, -:2$,              $Entropy=1$
+	2. $\{Com, Org\}$:  $+:2, -:2$,     $Entropy=1$
+	3. $IG=1-(\dfrac{4}{8}\times1+\dfrac{4}{8}\times1)=0$
+2. $\{Com\}\cup\{Edu, Org\}$
+	1. $\{Com\}:  +:0, -:2$         $Entropy=0$
+	2. $\{Edu, Org\}: + 4, -:2$     $Entropy=-\dfrac{4}{6}\log_2{\dfrac{4}{6}}-\dfrac{2}{6}\log_2{\dfrac{2}{6}}=0.9183$
+	3. $IG=1-(\dfrac{2}{8}\times0+\dfrac{6}{8}\times0.9183)=0.311275$
+3. $\{Org\}\cup\{Edu, Com\}$
+	1. $\{Org\}:  +:2, -:0$         $Entropy=0$
+	2. $\{Edu, Org\}: + 2, -:4$     $Entropy=-\dfrac{2}{6}\log_2{\dfrac{2}{6}-\dfrac{4}{6}\log_2{\dfrac{4}{6}}}=0.9183$
+	3. $IG=1-(\dfrac{2}{8}\times0+\dfrac{6}{8}\times0.9183)=0.311275$
+
+Both split $\{Com\}\cup\{Edu, Org\}$ and $\{Org\}\cup\{Edu, Com\}$ gives the highest information gain, which is $0.311275$. Therefore, the information gain of $Sender's \ Email$ is $0.311275$ for the root node.
+#### E(5.3.2)-3 Contain word "Free" (Binary)
+Binary Classification plays the same.
+- $Yes$
+	- $+:1, -:4$     $Entropy=-\dfrac{1}{5}\log_2{\dfrac{1}{5}}-\dfrac{4}{5}\log_2{\dfrac{4}{5}}=0.7219$
+- $No$
+	- $+:3, -:0$     $Entropy=0$
+- $IG=1-(\dfrac{5}{8}\times0.7219+\dfrac{3}{8}\times0)=0.5488125$
+
+#### E(5.3.2)-4 Generally
+- $IG(Word \ Count)=0.5488125$ with $\alpha=150$;
+- $IG(Sender's \ Email)=0.311275$;
+- $IG(Contain \ Word "Free")=0.5488125$
+
+### 5.3.3 Over Fitting and Pruning 过拟合与剪枝
+#### Overfitting
+- Natural end of process is 100% purity in each leaf
+- Overfits: Fits to the data too well that it even fits the noise data!
+- Result in: Low predictive accuracy of new data
+	- The error rate of validation data starts to increase after a certain number of splits.
+#### Pruning
+- CART lets the tree grow freely, and prune it back
+	- Allow some error.
+	- Find the exact point at which the validation error begins to rise.
+	- Generate successively smaller trees by pruning leaves
+		- At each pruning stage, multiple trees are possible.
+		- Use cost complexity to choose the best tree at that stage.
+- Choose the best tree at each pruning stage by using Cost Complexity
+	- $CC(T) = Err(T) + \alpha L(T)$
+		- $CC(T)$ - Cost Complexity of a tree.
+		- $Err(T)$ - Proportion of mis-classified results, i.e., error rate.
+		- $\alpha$ - a penalty factor attached to tree size
+
 ## 5.3.3 Regression Tree (RT)
-Minimize $\sum (x-\bar{x})^2$
-### Regression Problem
+- Used with continuous outcome variable
+- Procedure similar to classification tree:
+	- Attempt many splits, choose the one that minimizes impurity
+	- Measure impurity by: $\sum (x-\bar{x})^2$
+
+# 5.4 Pros and Cons
+## Advantages of Trees
+- Easy to use and understand
+	- Produces rules that are easy to interpret & implement
+- Automatic selection of variables
+	- Do not require the assumptions of statistical models
+	- Can work without extensive handling of missing data
+
+## Disadvantages
+- May not perform well when:
+	- There is a structure in the data that can't be well captured by horizontal and vertical splits.
+- Can't capture interactions between variables.
