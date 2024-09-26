@@ -58,7 +58,7 @@ D --Weak--> H([Yes])
 By calculating the difference between
 - The entropy **BEFORE** splitting, and
 - The entropy **AFTER** splitting,
-we can calculate the "Information Gained" from the splitting.
+we can calculate the ***Information Gained*** from the splitting.
 - When calculating, we should also consider the weights, i.e., the significance of each branch.
 
 **Basics**
@@ -71,7 +71,7 @@ we can calculate the "Information Gained" from the splitting.
 	- Obviously, $x^+=\sum_{i=1}^{n}x_i^+$, and $x^-=\sum_{i=1}^{n}x_i^-$
 
 **Entropy Before Split**
-- $p_+=\dfrac{x^+}{x^++x^-}$, $p^-=\dfrac{x^-}{x^++x^-}$
+- $p^+=\dfrac{x^+}{x^++x^-}$, $p^-=\dfrac{x^-}{x^++x^-}$
 - $Entropy(S)=-p^+\log_2p^+-p^-\log_2p^-$
 
 **Weighted Entropy After Split**
