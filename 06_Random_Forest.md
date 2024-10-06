@@ -27,7 +27,7 @@
 **Note:**
 - Each tree is fully grown and not pruned.
 
-### 6.1.2 Bootstrapping
+### 6.1.2 Bootstrapping 引导
 **Do:**
 - Reserve a tiny set $TR$ as the training set.
 - Reserve a large set $TE$ as the test set.
@@ -56,12 +56,10 @@
 - High accuracy.
 - High efficiency.
 	- Especially on large datasets.
-
 ### Good for high dimensional samples
 - Good tolerance on high dimension data samples.
 	- Handle thousands of input variables without variable deletion.
 - Highlights important variables.
-
 ### Good in error estimate and exception handling
 - Generates internal unbiased estimate of generalization error during the building process of the forest.
 - Effective in estimating missing data.
