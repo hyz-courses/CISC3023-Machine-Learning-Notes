@@ -10,32 +10,34 @@
 	- Difficult to establish IF-THEN rules based on NL.
 
 # 3.1 Basic Probability Theory
-## 3.1.1 [DEF] Probability
+## 3.1.1 [DEF] Probability 概率
 - The probability of an event 
 	- = the proportion of cases in which the event occurs.
-	- Expression: From 0 (absolute impossible) -> Unity (Absolute certain)
+	- Expression: From 0 (absolute impossible) $\rightarrow$ Unity (Absolute certain)
 	- Mostly strictly between 0 and 1. Each event has at least two outcomes: Success or failure.
 		- $P(success)=\dfrac{s}{s+f}$
 		- $P(failure)=\dfrac{f}{s+f}$
-## 3.1.2 [DEF] Conditional Probability
-- Let: A, B: Event
-- Conditional Probability:
-	- The probability that: If B occur, then A occur.
-	- $P(A|B)=\dfrac{num(A and B occur)}{num(B occur)}$
+## 3.1.2 [DEF] Conditional Probability 条件概率
+- Let: $A,B$ be an Event.
+- Conditional Probability of $A$ over $B$:
+	- The probability that: If $B$ occur, then $A$ occur.
+	- $P(A|B)=\dfrac{num(A\text{ and }B\text{ occur})}{num(B \text{ occur})}$
 	- $P(A|B)=\dfrac{P(A\cap B)}{P(B)}=\dfrac{P(B|A)P(A)}{P(B)}$ (yields the Bayesian Rule)
 
 # 3.2 Bayesian Reasoning
-## 3.2.1 Baysian Rule:
-- Given: Event E (Evidence)
-- Get: The prob. that event H (Hypothesis) will occur, as P.
-	- $P(H|E)=\dfrac{P(E|H)P(H)}{P(E)}=\dfrac{P(E|H)P(H)}{P(E|H)P(H)+P(E|\neg H)P(\neg H)}$
-
+## 3.2.1 Bayesian Rule:
+**Given**
+- An event $E$.
+	- $E$ stands for "Evidence".
+**Do**
+Get the prob that event H (Hypothesis) will occur, as P.
+- $P(H|E)=\dfrac{P(E|H)P(H)}{P(E)}=\dfrac{P(E|H)\cdot P(H)}{\Bigl[P(E|H)\cdot P(H)\Bigr]+\Bigl[P(E|\neg H)\cdot P(\neg H)\Bigr]}$
 ## 3.2.2 Variances:
 - Single Evidence, Multiple Hypothesis:
-	- $P(H_i|E)=\dfrac{P(E|H_i)P(H_i)}{\sum_{k=1}^{m}{P(E|H_k)P(H_k)}}$
-- Multiple Evidence, Multiple Hypothesis:
-	- $P(H_i|E_1,E_2,...,E_n)=\dfrac{P(E_1,E_2,...,E_n)P(H_i)}{\sum_{k=1}^{m}{P(E_1,E_2,...,E_n|H_k)P(H_k)}}$
-	- $\approx\dfrac{P(E_1|H_i)\times P(E_2|H_i)\times ... \times P(E_n|H_i)\times P(H_i)}{\sum_{k=1}^{m}{[P(E_1|H_k)\times P(E_2|H_k)\times ...\times P(E_n|H_k)\times P(H_k)}]}$, if conditional independence holds.
+	- $P(H_i|E)=\dfrac{P(E|H_i)\cdot P(H_i)}{\sum_{k=1}^{m}\Bigl[P(E|H_k)\cdot P(H_k)\Bigl]}$
+- Multiple Evidence, Multiple Hypothesis
+	- $P(H_i|E_1,E_2,...,E_n)=\dfrac{P(E_1,E_2,...,E_n)\cdot P(H_i)}{\sum_{k=1}^{m}\Bigr[{P(E_1,E_2,...,E_n|H_k)\cdot P(H_k)}\Bigr]}$
+	- $\approx\dfrac{\Bigl[P(E_1|H_i)\times P(E_2|H_i)\times ... \times P(E_n|H_i)\Bigr]\times P(H_i)}{\sum_{k=1}^{m}{[P(E_1|H_k)\times P(E_2|H_k)\times ...\times P(E_n|H_k)\times P(H_k)}]}$, if conditional independence holds.
 	- $=\dfrac{P(H_i)\prod_{a=1}^{n}{P(E_a|H_i)}}{\sum_{k=1}^{m}{P(H_k)\prod_{b=1}^{n}P(E_b|H_k)}}$
 
 ## Example
