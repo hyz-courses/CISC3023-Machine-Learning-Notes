@@ -1,4 +1,4 @@
-# 2.1 [DEF] Rules
+# 2.1 Rules
 ## 2.1.1 What is a rule
 - An IF-THEN structure
 - Relates given information to some actions.
