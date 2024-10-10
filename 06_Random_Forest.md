@@ -27,7 +27,7 @@
 **Note:**
 - Each tree is fully grown and not pruned.
 
-### 6.1.2 Bootstrapping 引导
+## 6.1.2 Bootstrapping 引导
 **Do:**
 - Reserve a tiny set $TR$ as the training set.
 - Reserve a large set $TE$ as the test set.
@@ -39,7 +39,7 @@
 - Training set $TR$, where $|TR|=n$.
 - Test set $TE$, where $|TE|=N-n', n'\in[1,n]$.
 **Note:**
-- Since we only copy whatever we selected from $D$ and put it back again in each iteration, it is possible that we pick a $\langle X_i, y_i\rangle$ from $D$ twice.
+- Since we only copy whatever we selected from $D$ and put it back again in each iteration, it is possible that we pick a $\langle X_i, y_i\rangle$ from $D$ twice (or three times, or more).
 - Suppose we have $N-n'$ records left in $D$ that's **never been** chosen, then $n'\leq n$.
 
 ## 6.1.3 Selection of $n$ and $m$
@@ -50,6 +50,26 @@
 	- Half of them, twice of them, ...
 	- Pick the best.
 
+## 6.1.4 Combine Results
+### Classification Task
+In classification, each decision tree outputs a class label, and the final prediction is based on a **majority vote** from all the trees.
+- **Example**: If you have 5 trees in your random forest, and their outputs are:
+	- Tree 1: Class A
+	- Tree 2: Class B
+	- Tree 3: Class A
+	- Tree 4: Class A
+	- Tree 5: Class B
+The final prediction would be **Class A** since it has the majority of votes (3 votes).
+### Regression Task
+In regression, each decision tree outputs a numerical value, and the final prediction is based on the **average** (mean) of the outputs from all the trees.
+- **Example**: If you have 3 trees in your random forest, and their outputs are:
+	- Tree 1: 4.5
+	- Tree 2: 5.0
+	- Tree 3: 6.0
+The final prediction would be the **average**:
+$$
+\frac{4.5 + 5.0 + 6.0}{3} = 5.17
+$$
 # 6.2 Pros and Cons
 ## 6.2.1 Advantages
 ### Performance

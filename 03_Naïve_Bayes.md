@@ -37,7 +37,7 @@ Get the prob that event H (Hypothesis) will occur, as P.
 	- $P(H_i|E)=\dfrac{P(E|H_i)\cdot P(H_i)}{\sum_{k=1}^{m}\Bigl[P(E|H_k)\cdot P(H_k)\Bigl]}$
 - Multiple Evidence, Multiple Hypothesis
 	- $P(H_i|E_1,E_2,...,E_n)=\dfrac{P(E_1,E_2,...,E_n)\cdot P(H_i)}{\sum_{k=1}^{m}\Bigr[{P(E_1,E_2,...,E_n|H_k)\cdot P(H_k)}\Bigr]}$
-	- $\approx\dfrac{\Bigl[P(E_1|H_i)\times P(E_2|H_i)\times ... \times P(E_n|H_i)\Bigr]\times P(H_i)}{\sum_{k=1}^{m}{[P(E_1|H_k)\times P(E_2|H_k)\times ...\times P(E_n|H_k)\times P(H_k)}]}$, if conditional independence holds.
+	- $\approx\dfrac{\Bigl[P(E_1|H_i)\cdot P(E_2|H_i)\cdot ... \cdot P(E_n|H_i)\Bigr]\cdot P(H_i)}{\sum_{k=1}^{m}{\Bigl[P(E_1|H_k)\cdot P(E_2|H_k)\cdot ...\cdot P(E_n|H_k)\times P(H_k)}\Bigr]}$, if conditional independence holds.
 	- $=\dfrac{P(H_i)\prod_{a=1}^{n}{P(E_a|H_i)}}{\sum_{k=1}^{m}{P(H_k)\prod_{b=1}^{n}P(E_b|H_k)}}$
 
 ## Example
@@ -53,7 +53,7 @@ Get the prob that event H (Hypothesis) will occur, as P.
 - Want $P(H_1|E_3)$.
 - $P(H_3|E_3)=\dfrac{P(E_3|H_3)P(H_3)}{P(E_3)}$
 	- $P(E_3|H_3)P(H_3)=0.9 \times 0.25=0.36$
-	- $P(E_3)=P(E_3|H_1)P(H_1)\times P(E_3|H_2)P(H_2)\times P(E_3|H_3)P(H_3)$
+	- $P(E_3)=\Bigl[P(E_3|H_1)P(H_1)\Bigr]\times \Bigl[P(E_3|H_2)P(H_2)\Bigr] \times \Bigl[P(E_3|H_3)P(H_3)\Bigr]$
 		- $=0.6\times 0.4+0.7\times 0.35+0.9\times 0.25=0.2838$
 
 # 3.3 Naïve Bayes Classifier
@@ -66,11 +66,15 @@ Get the prob that event H (Hypothesis) will occur, as P.
 ## 3.3.2 Naïve Bayes Estimation
 - Given:
 	- A conjunctive test sample: $x_1,x_2,...,x_n$
-- $c_{MAP}=argmax_{c_j\in C}P(c_j|x_1,x_2,...x_n)$
-	- $=argmax_{c_j\in C}\dfrac{P(x_1,x_2,...,x_n|c_j)P(c_j)}{P(x_1,x_2,...,x_n)}$
-	- $=argmax_{c_j\in C}P(x_1,x_2,...,x_n|c_j)P(c_j)$
-	- $=argmax_{c_j\in C}[P(x_1|c_j)\times P(x_2|c_j)\times ... \times P(x_n|c_j)]\times P(c_j)$
-	- $=argmax_{c_j\in C}P(c_j)\times \prod_{k=1}^{n}P(x_k|c_j)$
+- $c_{MAP}=argmax_{c_j\in C} \Bigl[P(c_j|x_1,x_2,...x_n)\Bigr]$
+
+	- $=argmax_{c_j\in C}\Bigl[\dfrac{P(x_1,x_2,...,x_n|c_j)P(c_j)}{P(x_1,x_2,...,x_n)}\Bigr]$
+
+	- $=argmax_{c_j\in C}\Bigl[P(x_1,x_2,...,x_n|c_j)\cdot P(c_j)\Bigr]$
+
+	- $=argmax_{c_j\in C}\Bigl[P(x_1|c_j)\times P(x_2|c_j)\times ... \times P(x_n|c_j)\times P(c_j)\Bigr]$
+
+	- $=argmax_{c_j\in C}\Bigl[P(c_j)\times \prod_{k=1}^{n}P(x_k|c_j)\Bigr]$
 
 ### Example
 | Day | Outlook  | Temp | Humitity |  Wind  | Play Tennis |
@@ -93,12 +97,17 @@ Known: Outlook=sunny, Temp=cool, Humidity=high, Wind=strong.
 Want: Play tennis or not?
 
 Do:
-- $MAP(Yes|sunny, cool, high, strong)$
-	- $=P(sunny, cool, high, strong|Yes)\times P(Yes)$
-	- $=P(sunny|Yes)\times P(cool|Yes)\times P(high|Yes)\times P(strong|Yes)\times P(Yes)$
+- $MAP(\text{Yes}|\text{sunny}, \text{cool}, \text{high}, \text{strong})$
+
+	- $=P(\text{sunny}, \text{cool}, \text{high}, \text{strong}|\text{Yes})\times P(\text{Yes})$
+
+	- $=P(\text{sunny}|\text{Yes})\times P(\text{cool}|\text{Yes})\times P(\text{high}|\text{Yes})\times P(\text{strong}|\text{Yes})\times P(\text{Yes})$
+
 	- $=[\dfrac{2}{9}\times \dfrac{3}{9}\times \dfrac{3}{9}\times \dfrac{3}{9}]\times \dfrac{9}{14}$
+
 	- $=0.005291005291$
-- $MAP(NO|sunny,cool,high,strong)$
+
+- $MAP(\text{NO}|\text{sunny}, \text{cool}, \text{high}, \text{strong})$
 	- $=P(sunny, cool, high, strong|No)\times P(No)$
 	- $=P(sunny|No)\times P(cool|No)\times P(high|No)\times P(strong|No)\times P(No)$
 	- $=[\dfrac{3}{5}\times \dfrac{1}{5}\times \dfrac{4}{5}\times \dfrac{3}{5}]\times\dfrac{5}{14}$
@@ -121,8 +130,8 @@ Resolution: Add-1 smoothing.
 Observations may be continuous. Use Gaussian Distribution instead.
 $$P(x_i|c_j)={\dfrac{1}{\sigma_{ik}\sqrt{2\pi}}e}^{\dfrac{-(x_i-\mu_{ik})^2}{2\sigma_{ik}^{2}}}=Gaussian(x_i, \mu_{ik}, \sigma_{ik})$$
 That is, for a specific class $c_j$, extract all the values $x_i\in c_j$ and form a normal distribution. This determines two variables:
-- $\sigma$, the standard deviation
-	- $\sigma=\sqrt{\dfrac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}$
 - $\mu$, the mean/expectation
 	- $\mu=\dfrac{1}{n}\sum_{i=1}^{n}x_i$
+- $\sigma$, the standard deviation
+	- $\sigma=\sqrt{\dfrac{1}{n}\sum_{i=1}^{n}(x_i-\mu)^2}$
 After the two variables are set, the probability $P(x_i|c_j)$ can be thus calculated.

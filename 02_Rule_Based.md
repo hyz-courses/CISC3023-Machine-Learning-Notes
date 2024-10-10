@@ -5,11 +5,11 @@
 - Relates IF part to THEN part.
 
 ## 2.1.2 Structure of a rule
-- **Antecedent:** The IF part
+- **Antecedent 前因:** The IF part
 	- Object
 	- Operator: Identifies an object, assigns a value
 	- Value: Symbolic / Numeric
-- **Consequent:** The THEN part
+- **Consequent 后果:** The THEN part
 	- Actions
 - Example:
 ```
@@ -68,11 +68,11 @@ Process:
 - Every cycle, don't use the fact derived in this cycle yet.
 - Use BFS instead of DFS
 
-| Known               | Rules Fired  | Notes           |
-| ------------------- | ------------ | --------------- |
-| A, B, E, D          |              |                 |
-| A, B, E, D, X, Y    | A -> X, B->Y | Don't use X yet |
-| A, B, E, D, X, Y, Z | D -> Z       |                 |
+| Known               | Rules Fired                          | Notes           |
+| ------------------- | ------------------------------------ | --------------- |
+| A, B, E, D          |                                      |                 |
+| A, B, E, D, X, Y    | A $\rightarrow$ X, B $\rightarrow$ Y | Don't use X yet |
+| A, B, E, D, X, Y, Z | D $\rightarrow$ Z                    |                 |
 
 ## 2.3.1 [DEF] Forward Chaining
 - Data-Driven Reasoning
