@@ -1,27 +1,34 @@
 # 4.1 A Concept Learning Task
-- Given:
-	- Variable vector structure $X=\{x_1, x_2, ..., x_n\}$
-		- A vector, that's a sequence of values, each having its own meaning.
-		- e.g., $X=\{Sky, Temp, Humid, Wind, Water, Forecast\}$
-	- Target Function $c: X \rightarrow \{0,1\}$
-		- e.g., $\{Sky, Temp, Humid, Wind, Water, Forecast\}$ $\rightarrow \{EnjoySpt=Yes, EnjoySpt=No\}$.
-	- Hypothesis $h$:
-		- An example input in the format of $X$.
-		- Conjunction of constraints on attributes, where each could be:
-			- A specific value (e.g., $Water=Warm$), or
-			- Any value (e.g., $Water=?$), or
-			- No value (e.g., $Water=\emptyset$).
-		- e.g., $h=\{Sky=Sunny, Temp=Warm, Humid=Normal,$ 
-		  $Wind=Strong, Water=Warm, Forecast=Same\}$
-	- Training examples $D$:
-		- Positive and negative examples of target function
-		- $D=\{\langle X_1, c(X_1)\rangle, \langle X_2, c(X_2) \rangle, ..., \langle X_m, c(X_m) \rangle\}$
-- Do:
-	- Derive a general if-then rule to best summarize the training examples.
+**Given**
+- Variable vector structure $X=\{x_1, x_2, ..., x_n\}$
+	- A vector, that's a sequence of values, each having its own meaning.
+	- e.g., $X=\{\text{Sky}, \text{Temp}, \text{Humid}, \text{Wind}, \text{Water}, \text{Forecast}\}$
+- Hypothesis $h$:
+	- An example input in the format of $X$.
+	- Conjunction of constraints on attributes, where each could be:
+		- A specific value (e.g., $Water=Warm$), or
+		- Any value (e.g., $Water=?$), or
+		- No value (e.g., $Water=\emptyset$).
+		- e.g., $h=\langle\text{Sky}=\text{Sunny}, \text{Temp}=\text{Warm}, \text{Humid}=\text{Normal}$ 
+		  $\text{Wind}=\text{Strong}, \text{Water}=\text{Warm}, \text{Forecast}=\text{Same}\rangle$
+	- [?] What's different between a hypothesis $h$ and a data $x$?
+		- A hypothesis $h$ is a rule, while a data $x$ is a vector to be tested by the rule.
+		- For instance:
+			- Given a hypothesis $h=\langle?,?,\text{Normal},\text{Strong},\text{Warm},\text{Same}\rangle$
+			- The hypothesis predicts that any $x$ that passes $h$ will be produces a positive output $c(x)$, which may **NOT** be true according to the given dataset.
+				- $h({\text{Sunny},\text{Warm},\text{Normal},\text{Strong},\text{Warm},\text{Same}})=+$
+				- $h({\text{Sunny},\text{Warm},\text{High},\text{Strong},\text{Warm},\text{Same}})=-$
+- Target Function $c: X \rightarrow \{0,1\}$
+	- e.g., $c\Bigl(\{\text{Sunny}, \text{High}, \text{Normal}, \text{Strong}, \text{Warm}, \text{Same}\}\Bigr)$ $= (\text{EnjoySpt}=\text{Yes})$.
+- Training examples $D$:
+	- Positive and negative examples of target function
+	- $D=\{\langle X_1, c(X_1)\rangle, \langle X_2, c(X_2) \rangle, ..., \langle X_m, c(X_m) \rangle\}$
+**Do**
+- Derive a general if-then rule to best summarize the training examples.
 
 # 4.2 Find-S Algorithm 寻详算法
 ## 4.2.1 General-to-specific Ordering of Hypothesis
-- [DEF] More-General-than-or-Equal-to 详于或等于
+- [i] More-General-than-or-Equal-to 详于或等于
 	- Let $h_j$ and $h_k$ be bool-valued functions defined over $X$.
 	- Then, $h_j$ is $more\_general\_than\_or\_equal\_to$ $h_k$ ($h_j\ge_g h_k$) iff:
 		- $\forall x\in X, h_k(x)=1 \rightarrow h_j(x)=1$
@@ -121,6 +128,11 @@ Procedure:
 				- is less general than another hypothesis in $G$.
 
 **Example**
+
+| Training Samples                                                                    | S   | G   | Description |
+| ----------------------------------------------------------------------------------- | --- | --- | ----------- |
+| $X_{1}=\langle\text{Su},\text{Wr},\text{Nr},\text{St},\text{Wr},\text{Sm}\rangle,+$ |     |     |             |
+|                                                                                     |     |     |             |
 
 | Training Samples                                                     | S - Specific Bound                                                                  | G - General Bound                                                                                                                                                                                                                                                                                                                                                                                      | Description                                                                                                                                                     |
 | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
