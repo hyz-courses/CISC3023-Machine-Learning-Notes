@@ -1,5 +1,13 @@
 # 5.1 Introduction
-## 5.1.1 A sample decision tree
+## 5.1.0 Properties of DT Learning & DT
+- [i] Decision Tree Learning is:
+- A method for inductive inference.
+- A method for approximating discrete-valued functions.
+	- Robust to noisy data.
+	- Can learn disjunctive expressions.
+- The learned function is represented by a *decision tree*.
+	- which also could be represented as *sets of if-then rules*.
+### A sample decision tree
 ```mermaid
 flowchart TD
 A[Outlook] --Sunny--> B[Humidity]
@@ -10,18 +18,14 @@ B --Normal--> F([Yes])
 D --Strong--> G([No])
 D --Weak--> H([Yes])
 ```
-## 5.1.2 Properties of Decision Tree Learning
-- Decision Tree Learning is a method for approximating discrete-valued functions that is
-	- Robust to noisy data and
-	- can learn disjunctive expressions
-- The learned function is represented by a decision tree,
-	- which can be also represented by a set of if-then rules.
-- **In General:**
-	- Decision Trees represent a **disjoint** of conjunctions of constraints on the attribute value of instance.
+
+- [i] A Decision Tree:
+	- Represents a *disjoint* of conjunctions of constraints on the attribute value of instance.
 		- disjoint = a set of $\lor$
-	- Each path from the tree from root to a leaf is a **conjunction** of attribute sets.
+		- e.g., sample decision tree = $(\text{Outlook}=Sunny\land \cdots)\lor(\text{Outlook}=Overcast\land \cdots)\lor(\text{Outlook}=Rain\land \cdots)$
+	- Each path from the tree, from root to leaf is a *conjunction* of attribute sets.
 		- conjunction = a set of $\land$
-		- $e.g.,$ The path $\text{Outlook}\rightarrow \text{Humidity}\rightarrow \text{No}$ stands for $\text{Outlook}=\text{Sunny} \land \text{Humidity}=\text{High} \rightarrow \text{No}$
+		- e.g., the path $\text{Outlook}\rightarrow \text{Humidity}\rightarrow No \equiv \text{Outlook}=Sunny \land \text{Humidity}=High \implies No$
 
 ## 5.1.3 Appropriate Problems for DT
 1. Instances describable by attribute-value pairs.
