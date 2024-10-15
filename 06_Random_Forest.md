@@ -7,7 +7,7 @@
 # 6.1 Algorithm
 
 ## 6.1.1 Training
-**Given:**
+**Given**
 - $D$: The set of training data.
 	- $D=\{\langle X_1, y_1\rangle, \langle X_2, y_2\rangle, \langle X_3, y_3\rangle,\cdots,\langle X_N, y_N\rangle\}$, where
 	- $\forall i\in[1,N], X_i=\{x_{i1}, x_{i2}, \cdots, x_{iM}\}$.
@@ -15,7 +15,7 @@
 	- $|D|=N$
 - $M$: The number of variables in each data.
 	- $\forall i\in[1,n], \ |X_i|=M$
-**Do:**
+**Do**
 - For each tree:
 	- ***Bootstrap*** to get $n$ data from entire $N$ training data.
 		- The selected $n$ data forms the training set $TR\subset D$.
@@ -24,21 +24,21 @@
 			- The $n$ data sets may contain same ones. That is, $n'\leq n$.
 	- For each node:
 		- Randomly select $m$ feature variables, calculate the best split based on these $m$ variables in the training set $TR$.
-**Note:**
+**Note**
 - Each tree is fully grown and not pruned.
 
 ## 6.1.2 Bootstrapping 引导
-**Do:**
+**Do**
 - Reserve a tiny set $TR$ as the training set.
 - Reserve a large set $TE$ as the test set.
 - Do $n$ times:
 	- Select a sample $\langle X_i, y_i\rangle\in D$
 	- Copy this sample into $TR$.
 	- Put this sample back to $D$.
-**Output:**
+**Output**
 - Training set $TR$, where $|TR|=n$.
 - Test set $TE$, where $|TE|=N-n', n'\in[1,n]$.
-**Note:**
+**Note**
 - Since we only copy whatever we selected from $D$ and put it back again in each iteration, it is possible that we pick a $\langle X_i, y_i\rangle$ from $D$ twice (or three times, or more).
 - Suppose we have $N-n'$ records left in $D$ that's **never been** chosen, then $n'\leq n$.
 
