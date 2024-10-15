@@ -1,10 +1,17 @@
 # 4.1 A Concept Learning Task
+## 4.1.0 Why a concept learning task?
+- Many learning involves acquiring *general concepts* from specific training examples.
+- [i] Each concept could be:
+	- Considered as a Boolean-valued function over a set.
+		- A concept: $f: S\mapsto \{\text{true},\text{false}\}$
+- **Concept Learning** is the process of approximating such a Boolean-valued function from given examples.
+## 4.1.1 Definition
 **Given**
 - Variable vector structure $X=\{x_1, x_2, ..., x_n\}$
 	- A vector, that's a sequence of values, each having its own meaning.
 	- e.g., $X=\{\text{Sky}, \text{Temp}, \text{Humid}, \text{Wind}, \text{Water}, \text{Forecast}\}$
+
 - Hypothesis $h$:
-	- An example input in the format of $X$.
 	- Conjunction of constraints on attributes, where each could be:
 		- A specific value (e.g., $Water=Warm$), or
 		- Any value (e.g., $Water=?$), or
@@ -12,16 +19,30 @@
 		- e.g., $h=\langle\text{Sky}=\text{Sunny}, \text{Temp}=\text{Warm}, \text{Humid}=\text{Normal}$ 
 		  $\text{Wind}=\text{Strong}, \text{Water}=\text{Warm}, \text{Forecast}=\text{Same}\rangle$
 	- [?] What's different between a hypothesis $h$ and a data $x$?
-		- A hypothesis $h$ is a rule, while a data $x$ is a vector to be tested by the rule.
+		- A hypothesis $h$ is a rule, while a data $x$ is a vector/data sample to be tested by the rule.
+		- That is, the hypothesis assumes that
+			- Any $x$ that conform it shall be true;
+			- Any $x$ that doesn't conform it shall be false.
 		- For instance:
-			- Given a hypothesis $h=\langle?,?,\text{Normal},\text{Strong},\text{Warm},\text{Same}\rangle$
-			- The hypothesis predicts that any $x$ that passes $h$ will be produces a positive output $c(x)$, which may **NOT** be true according to the given dataset.
-				- $h({\text{Sunny},\text{Warm},\text{Normal},\text{Strong},\text{Warm},\text{Same}})=+$
-				- $h({\text{Sunny},\text{Warm},\text{High},\text{Strong},\text{Warm},\text{Same}})=-$
+			- Given 
+				- A hypothesis $h=\langle?,?,\text{Normal},\text{Strong},\text{Warm},\text{Same}\rangle$
+				- Two data samples:
+					- $X_{1}=\{{\text{Sunny},\text{Warm},\text{Normal},\text{Strong},\text{Warm},\text{Same}}\}$
+					- $X_{2}=\{{\text{Sunny},\text{Warm},\text{Normal},\text{Strong},\text{Cold},\text{Same}}\}$
+			- Then, the hypothesis $h$:
+				- *Assumes* $X_{1}$ to be $\text{Yes}$, since $X_{1}$ confronts $h$.
+				- *Assumes* $X_{2}$ to be $\text{No}$, since $X_{2}$ does not confronts $h$ ($\text{Cold}\neq \text{Warm}$).
+
 - Target Function $c: X \rightarrow \{0,1\}$
 	- e.g., $c\Bigl(\{\text{Sunny}, \text{High}, \text{Normal}, \text{Strong}, \text{Warm}, \text{Same}\}\Bigr)$ $= (\text{EnjoySpt}=\text{Yes})$.
+	- [?] Relationships between a target function and a hypothesis?
+		- They share the same structure, i.e. $f:X\mapsto\{\text{Yes},\text{No}\}$.
+		- A target function is defined as the *ground truth* in the training examples;
+		- While a hypothesis is a *general concept* we're attempting to derive from the training examples.
+		- That is, instead of *Assuming*, the target function *Restricts*.
+
 - Training examples $D$:
-	- Positive and negative examples of target function
+	- Positive and negative examples of target function, paired with training samples.
 	- $D=\{\langle X_1, c(X_1)\rangle, \langle X_2, c(X_2) \rangle, ..., \langle X_m, c(X_m) \rangle\}$
 **Do**
 - Derive a general if-then rule to best summarize the training examples.
