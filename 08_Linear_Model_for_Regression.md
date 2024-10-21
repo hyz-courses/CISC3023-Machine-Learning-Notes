@@ -101,8 +101,8 @@ where,
 - $M+1$ is the number of operations.
 - $\mathbf{w}$ is the weight vector:
 	- $\mathbf{w}=\begin{bmatrix}w_0 \\ w_1 \\ \cdots \\ w_M\end{bmatrix}$.
-- $\mathbf{\phi}$ is the basic function vector:
-	- $\mathbf{\phi}=\begin{bmatrix}\phi_1 \\ \phi_2 \\ \cdots \\ \phi_M\end{bmatrix}$.
+- $\mathbf{\phi}$ is the vector of outputs of basic function vector:
+	- $\mathbf{\phi}=\begin{bmatrix}\phi_0(\mathbf{x}) \\ \phi_1(\mathbf{x}) \\ \cdots \\ \phi_M(\mathbf{x})\end{bmatrix}$.
 
 ### Focusing all the test samples
 In compact form, we have:
@@ -216,3 +216,31 @@ $$
 \mathbf{w}_{WL}=\mathbf{w}_{LS}
 $$
 yielding the **Gaussian Noise Assumption**.
+
+# 8.3 Learn $\mathbf{w}$ with Sequential Methods
+## 8.3.1 Least Mean Squares (LMS)
+- [i] LMS is a gradient-descent method which
+- Minimizes the instantaneous squared error, instead of calculating the full expectation.
+$$\mathcal{J}_{n}=(y_{n}-\mathbf{w}^\top\phi(\mathbf{x}_{n}))^2$$
+- This is the error for a particular sample $n$.
+
+Gradient Descent is used to update the weight vector $\mathbf{w}$ to minimize the error. The weight update rule is given by:
+$$
+\mathbf{w}\leftarrow \mathbf{w}-\eta \nabla \mathcal{J}_{n}
+$$
+$$
+\leftarrow \mathbf{w}-\eta \cdot (y_{n}-\mathbf{w}^\top\phi(\mathbf{x}_{n}))\cdot\phi(\mathbf{x}_{n})
+$$
+where $\eta>0$ is the learning rate.
+
+## 8.3.2 Recursive LS
+- [i] Forgetting Factor $\lambda$ is introduced to de-emphasize old samples.
+- The optimized error function is:
+$$
+\mathcal{J}_{RLS}=\dfrac{1}{2}\sum_{i=1}^{n}\lambda^{n-i}(y-\mathbf{w}_{i}^\top\phi(\mathbf{x}_{i}))^2
+$$
+- Solve $\dfrac{\partial \mathcal{J}_{RLS}}{\partial \mathbf{w}_{n}}=0$, which leads to 
+$$
+\Bigl[ \sum_{i=1}^{n} \lambda^{n-i}\phi(\mathbf{x}_{i})\phi(\mathbf{x}_{i})^\top\Bigr]\mathbf{w}_{n}=\Bigl[\sum_{i=1}^{n}\lambda^{n-i}y_{i}\phi(\mathbf{x}_{i}) \Bigr]
+$$
+

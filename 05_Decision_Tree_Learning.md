@@ -1,12 +1,12 @@
 # 5.1 Introduction
-## 5.1.0 Properties of DT Learning & DT
+## 5.1.1 Properties of DT Learning & DT
 - [i] Decision Tree Learning is:
-- A method for inductive inference.
-- A method for approximating discrete-valued functions.
-	- Robust to noisy data.
-	- Can learn disjunctive expressions.
-- The learned function is represented by a *decision tree*.
-	- which also could be represented as *sets of if-then rules*.
+	- A method for inductive inference 归纳推理.
+	- A method for approximating discrete-valued functions.
+		- Robust to noisy data.
+		- Can learn disjunctive expressions.
+	- The learned function is represented by a *decision tree*.
+		- which also could be represented as *sets of if-then rules*.
 ### A sample decision tree
 ```mermaid
 flowchart TD
@@ -23,9 +23,33 @@ D --Weak--> H([Yes])
 	- Represents a *disjoint* of conjunctions of constraints on the attribute value of instance.
 		- disjoint = a set of $\lor$
 		- e.g., sample decision tree = $(\text{Outlook}=Sunny\land \cdots)\lor(\text{Outlook}=Overcast\land \cdots)\lor(\text{Outlook}=Rain\land \cdots)$
+		- A set of all possible decision paths.
 	- Each path from the tree, from root to leaf is a *conjunction* of attribute sets.
 		- conjunction = a set of $\land$
 		- e.g., the path $\text{Outlook}\rightarrow \text{Humidity}\rightarrow No \equiv \text{Outlook}=Sunny \land \text{Humidity}=High \implies No$
+
+## 5.1.2 How to Test a sample with a DT
+**Given**
+- A *pre-trained* decision tree that's used to test unseen samples.
+- A given sample.
+**Do**
+- Sort item down the tree, from root to some leaf node.
+- For each node in a tree:
+	- Specifies *a test of some attribute* of the instance.
+		- i.e., $\text{Weather}=Good\lor \text{Weather}=Bad$
+- Start the classification of an instance at the *root node*.
+	- Then, move down the tree branch to the value in the given example.
+	- Repeat this process until we meet a leaf node.
+### Example
+```
+Given: <Sunny, Normal>
+Start.
+	Look at node "Outlook", Go to branch "Sunny";
+	Look at node "Humidity", Go to branch "Normal";
+	Look at node "Yes", Leaf Node, conclusion reached.
+	Output: Yes.
+End.
+```
 
 ## 5.1.3 Appropriate Problems for DT
 1. Instances describable by attribute-value pairs.
@@ -38,32 +62,42 @@ D --Weak--> H([Yes])
 5. Missing attribute values in training data.
 
 # 5.2 Measurement of Split Purity
-## 5.2.1 Attributes & Purity of Decision
-- We want to know which attribute is the best classifier.
-- Each attribute can be represented as a node, splitting test sample into 2 classes (in the binary case), or multiple classes (in the n-nary case).
-- The *purer* the splitting, the better the decision.
+## 5.2.1 DT Learning Algorithm & Purity of Decision
+- [i] To generate/learn a decision tree
+	- We perform a top-down *greedy search* through the space of possible decision trees.
+	- We want to know which attribute of an arbitrary data sample is the best classifier.
+		- Each attribute can be represented as a node, splitting test sample into 2 or more possible values on this attribute.
+			- $\text{Weather}=Normal \lor \text{Weather}=Good \lor \text{Weather}=Bad$.
+		- The *purer* the splitting, the better the node is.
 ## 5.2.2 Entropy 熵
 ### Definition
-- Given **a split** from collection $S$ with **portions** of both positive and negatives $p_+, p_-$, 
-  the entropy of the collection would be:
-	- $Entropy(S)=-p_+\log_2p_+-p_-\log_2p_-$
-- The higher the entropy, the fewer the information the sample contains.
-	- High Entropy = More Messy, Lower Entropy = Less Messy 
+- [i] Entropy measures the homogeneity 同质性 of examples.
+	- Given *a split* from collection $S$ with *portions* of both positive and negatives $p_+, p_-$, the **entropy** of the collection would be:
+		- $Entropy(S)=-(p_+\log_2p_+)-(p_-\log_2p_-)$
+	- The higher the entropy, the fewer the information the sample contains.
+		- High Entropy = More Messy, Lower Entropy = Less Messy 
 
 ![[2-Split Entropy.png]]
 ### Properties
 - Domain is $[0,1]$;
 	- Monotonically, Increase in $p_+\in[0,\dfrac{1}{2}]$, Decrease in $p_+\in[\dfrac{1}{2},1]$ (symmetric in $p_-$);
-- Range is $[0,1]$;
+- Range is $[0,1]$ (for binary classification);
 	- Reaches the peak at $p=\dfrac{1}{2}$, reaches the lowest point at $p_+=0$ and $p_+=1$.
+### General Case
+- [i] Entropy can be applied not only in binary classification, but also classification tasks that target on multiple classes.
+- Given a split $S$ that splits an attribute examples into $c$ possible values:
+	- $Entropy(S)=\sum_{i=1}^{c}-p_{i}\log_{2}p_{i}$
+	- where $p_i$ is the proportion of examples in $S$ that's been given the value $i$ in the attribute.
+
 ## 5.2.3 Gini Index 基尼指数
 ### Definition
 - For a split $S_i$ from collection $S$ that has results with $m$ labels:
-	- $|S_i|=x_{i1}+x_{i2}+\cdots+x_{im}$
+	- $|S_{i}|=|S_{i}|^{(1)}+|S_{i}|^{(2)}+\cdots+|S_{i}|^{(m)}$
+	- $m$-ary classification
 - The Gini Index of this split is:
 	- $Gini(S_i)=1-\sum_{j=1}^{m}{(p_{ij})}^2$
-		- $=1-\sum_{j=1}^{m}(\dfrac{x_{ij}}{x_{i1}+x_{i2}+\cdots+x_{im}})^2$
-		- $=1-\dfrac{\sum_{j=1}^{m}x_{ij}^2}{|S_i|^2}$
+		- $=1-\sum_{j=1}^{m}\Bigl(\dfrac{|S_{i}|^{(j)}}{|S_{i}|^{(1)}+|S_{i}|^{(2)}+\cdots+|S_{i}|^{(m)}}\Bigr)^2$
+		- $=1-\dfrac{\sum_{j=1}^{m}(|S_{i}|^{(j)})^2}{m|S_i|^2}$
 - The higher the Gini Index, the fewer the information the sample contains.
 	- Same as entropy
 ### Properties
@@ -77,9 +111,9 @@ Reaches maximum when $p_{ij}=\dfrac{1}{m}$
 # 5.3 Information Gain
 ## 5.3.1 Calculation of Information Gain
 By calculating the difference between
-- The entropy **BEFORE** splitting, and
-- The entropy **AFTER** splitting,
-we can calculate the ***Information Gained*** from the splitting.
+- The entropy *BEFORE* splitting, and
+- The entropy *AFTER* splitting,
+we can calculate the **Information Gained** from the splitting.
 - When calculating, we should also consider the **weights**, i.e., the significance of each branch.
 
 **Basics**
@@ -101,11 +135,11 @@ flowchart TD
 	- $|S_i|=|S_i|^++|S_i|^-$
 	- Obviously, $|S|^+=\sum_{i=1}^{n}|S_i|^+$, and $|S|^-=\sum_{i=1}^{n}|S_i|^-$
 
-**Entropy Before Split**
+### Step 1. Calculate the Entropy Before Split
 - $p^+=\dfrac{|S|^+}{|S|^++|S|^-}$, $p^-=\dfrac{|S|^-}{|S|^++|S|^-}$
 - $Entropy(S)=-p^+\log_2p^+-p^-\log_2p^-$
 
-**Weighted Entropy After Split**
+### Step 2. Calculate the Weighted Entropy After Split
 - For each branch $S_i$:
 	- $p_i^+=\dfrac{|S_{i}|^+}{|S_{i}|^++|S_{i}|^-}$, $p_i^-=\dfrac{|S_{i}|^-}{|S_{i}|^++|S_{i}|^-}$
 	- Weight of this branch $w_i=\dfrac{|S_i|}{|S|}$
@@ -115,10 +149,10 @@ flowchart TD
 	- $=\sum_{i=1}^{n}\dfrac{|S_i|}{|S|}Entropy(S_i)$
 		- $=\sum_{i=1}^{n} \dfrac{|S_{i}|}{|S|}(-p_i^+\log_2p_i^+-p_i^-\log_2p_i^-)$
 
-**Information Gain**
+### Step 3. Calculate Information Gain
 - $Gain(S)=\text{Entropy \ Before \ Split} \ - \text{\ Entropy \ After \ Split}$
 	- [*] $=Entropy(S)-\sum_{i=1}^{n}\dfrac{|S_i|}{|S|}Entropy(S_i)$
-## 5.3.2 An example
+## 5.3.2 Calculate Info Gain: An example
 **Given**
 - A decision node, with the amounts in each class:
 	- Collection 1 ($S_1$):
@@ -159,12 +193,29 @@ A[Humidity 9+, 4-]--Low-->C[5+, 1-]
 # 5.4 CART
 
 ## 5.4.0 What is CART?
-- Classification and Regression Tree
+- Classification and Regression Tree.
 - A **binary tree** that can handle numeric inputs and outputs.
+
+## 5.4.0 Recursive Partitioning
+**Given**
+- A set of training samples:
+	- $\mathbf{X}=\{\mathbf{x}_{1},\mathbf{x}_{2},\dots,\mathbf{x}_{n}\}$, where
+		- $\mathbf{x}_{i}=\begin{bmatrix}x_{i1} & x_{i2} & \cdots & x_{im}\end{bmatrix}$, where $x_{ij}$ is the $j$-th variable of data sample $\mathbf{x}_{i}$.
+- A mapping relation that labels the training samples.
+	- $c:\mathbf{X}\mapsto \mathbf{y}$
+**Do**
+- For all variables $x_{ij}$ in an arbitrary data sample $\mathbf{x}_{i}$,
+	- Split all data samples $\mathbf{X}$ into *two* portions with respect to $x_{ij}$.
+		- [I] Different variable types (categorical/numerical) has their own dedicated way to split specifically into *two* portions.
+	- Measure how *pure* this split is.
+- Select the variable $x_{ij}$ that gives the purest split.
+- Repeat the above process for a second split, and so on.
+
 ## 5.4.1 Classification Tree (CT)
 ### How to split continuous variable?
 - Sort the continuous variable.
-- Find all separation points that separates the continuous variable into lower and higher parts.
+- Find all separation mid-points that separates the continuous variable into lower and higher parts.
+	- For instance, for a set of continuous values $14.0, 14.8, 16.0$, we inspect $14.4, 15.4$, which are the mid points of the above set.
 - Select the separation point $\alpha$ that gives the best purity.
 ### How to split categorical variable?
 - Examine all possible ways in which the categories can be split.
@@ -253,6 +304,7 @@ Binary Classification plays the same.
 - $IG(\text{Word \ Count})=0.5488125$ with $\alpha=150$;
 - $IG(\text{Sender's \ Email})=0.311275$;
 - $IG(\text{Contain \ Word "Free"})=0.5488125$
+Therefore, use $\text{Word Count}$ or $\text{Contain Word "Free"}$ as the root node.
 ## 5.4.2 Over Fitting and Pruning 过拟合与剪枝
 ### Overfitting
 - Natural end of process is 100% purity in each leaf
