@@ -5,26 +5,85 @@
 - A particular vector $\mathbf{x}\in \mathbb{R}^d$
 **Do**
 - Assign the vector $\mathbf{x}$ to one of the two classes.
+	- Namely, to calculate the probability of $\mathbf{x}\in c_{i}$ for all $c_{i}\in C$.
 
 From the Bayesian Rule, we derive that
-- $P(c_{1}|\mathbf{x})=\dfrac{P(\mathbf{x}|c_{1})P(c_{1})}{P(\mathbf{x})}$
-	- $= \dfrac{P(\mathbf{x}|c_{1})P(c_{1})}{P(\mathbf{x}|c_{1})P(c_{1})+P(\mathbf{x}|c_{2})P(c_{2})}$
-	- $=\dfrac{1}{1+\frac{P(\mathbf{x}|c_{2})P(c_{_{2}})}{P(\mathbf{x}|c_{1})P(c_{1})}}$
-	- $=\dfrac{1}{1+e^{-\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]-\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]}}$
+$$P(c_{1}|\mathbf{x})=\dfrac{P(\mathbf{x}|c_{1})P(c_{1})}{P(\mathbf{x})}$$
+- $= \dfrac{P(\mathbf{x}|c_{1})P(c_{1})}{P(\mathbf{x}|c_{1})P(c_{1})+P(\mathbf{x}|c_{2})P(c_{2})}$
+
+- $=\dfrac{1}{1+\frac{P(\mathbf{x}|c_{2})P(c_{_{2}})}{P(\mathbf{x}|c_{1})P(c_{1})}}$
+
+- $=\dfrac{1}{1+e^{-\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]-\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]}}$
+
 which can be written in the form of a **logistic function**:
 $$P(c_{1}|\mathbf{x})=\dfrac{1}{1+e^{-\xi}}$$
-where
+where,
 $$\xi=\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$$
-## 9.1.2 Class-Conditional Density Function
-Assume that the class-conditional densities of the multi-variate input vector $\mathbf{x}$ is a Gaussian distribution with a common covariate.
+- Likelihood Ratio: $\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]$
+- Prior Ratio: $\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
+## 9.1.2 Multivariate Gaussian Distribution
+Assumed that, within each class, the  multi-variate input vector $\mathbf{x}$ follows a Gaussian Distribution with a common covariate $\Sigma$.
 $$P(\mathbf{x}|c_{i})=\dfrac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}}e^{-\dfrac{1}{2}(\mathbf{x}-\mathbf{\mu}_{i})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{i})}$$
 From which we derive that
+- $ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]$
+
+- $=\ln\Bigl[\dfrac{e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{1})}}{e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{2})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{2})}}\Bigr]$
+
+- $=\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{2})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{2})-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{1})$
+
+- $=\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}-\mathbf{\mu}_{2}^\top\Sigma^{-1})(\mathbf{x}-\mathbf{\mu}_{2})-\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}-\mathbf{\mu}_{1}^\top\Sigma^{-1})(\mathbf{x}-\mathbf{\mu}_{1})$
+
+- $=\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}\mathbf{x}-\mathbf{x}^\top\Sigma^{-1}\mathbf{\mu}_{2}-\mathbf{\mu}_{2}^\top\Sigma^{-1}\mathbf{x}+\mathbf{\mu}_{2}^\top\Sigma^{-1}\mathbf{\mu}_{2})$
+  $-\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}\mathbf{x}-\mathbf{x}^\top\Sigma^{-1}\mathbf{\mu}_{1}-\mathbf{\mu}_{1}^\top\Sigma^{-1}\mathbf{x}+\mathbf{\mu}_{1}^\top\Sigma^{-1}\mathbf{\mu}_{1})$
+
+- $=\frac{1}{2}\Bigl[\mathbf{x}^\top\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})+(\mathbf{\mu}_{1}^\top-\mathbf{\mu}_{2}^\top)\Sigma^{-1}\mathbf{x}+(\mathbf{\mu}_{2}^\top+\mathbf{\mu}_{1}^\top)\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})\Bigr]$
+
+- $=(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})^\top\Sigma^{-1}\mathbf{x}+\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})$
+
+Therefore, the exponential $\xi$ can be rewritten as:
+- $\xi=(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})^\top\Sigma^{-1}\mathbf{x}+\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
+
+- [*] $=\Bigl[\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})\Bigr]^\top\mathbf{x} +\Bigl(\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]\Bigr)$ , with $({\Sigma^{-1}})^\top=\Sigma^{-1}$ known.
+
+-  $=\mathbf{w}^\top\mathbf{x}+b$
+
+In conclusion,
 $$P(c_{1}|\mathbf{x})=\dfrac{1}{1+e^{-(\mathbf{w}^\top\mathbf{x}+b)}}$$
 where
 - $\mathbf{w}=\Sigma^{-1}(\mu_{1}-\mu_{2})$, and
-- $b=\dfrac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\dfrac{P(c_{1})}{P(c_{2})}\Bigr]$
-
+- $b=\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
+### Properties of Logistic Functions
+```functionplot
+---
+title: Logistic Function
+xLabel: \xi
+yLabel: \sigma
+bounds: [-3, 3, -0.2, 1]
+disableZoom: false
+grid: true
+---
+f(x)=1/(1+E^(-x))
+```
+1. Limits
+	1. $\lim_{ \xi \to -\infty }\sigma(\xi)=0$
+	2. $\lim_{ \xi \to \infty }\sigma(\xi)=1$
+2. Central Symmetry:
+	1. $\sigma(-\xi)=1-\sigma(\xi)$
+3. Derivative:
+	1. $\dfrac{d\Bigl[\sigma(\xi)\Bigr]}{d\xi}=\sigma(\xi)\sigma(-\xi)=\sigma(\xi)\Bigl(1-\sigma(\xi)\Bigr)$
 ## 9.1.3 Maximum Likelihood Formulation
+### Recall: Bernoulli Distribution
+Suppose that a variable $Y$ confronts a Bernoulli Distribution,
+- i.e., $Y \sim \text{Bernoulli}(p)$
+- where $p$ is the probabilistic of being $\text{Success}$,
+the probabilistic distribution function is
+$$
+P(Y=y)=
+\begin{cases}
+p & \text{if} \ y = 1 \\
+1-p & \text{if} \ y=0
+\end{cases}
+$$
 ### Convert $\sigma$ to Probability
 We want to predict a binary output $y_{n}\in\{0,1\}$ from an input $\mathbf{x}_{n}$. From above, we know that the logistic regression has the form:
 $$
@@ -33,32 +92,34 @@ $$
 where
 $$\sigma(\xi)=\dfrac{1}{1+e^{-\xi}}$$
 We model input-output by a conditional Bernoulli Distribution:
-$$P(y_{n}=1|\mathbf{x}_{n})=\sigma(\mathbf{w}^\top\mathbf{x}_{n})$$
-This is the probability $k$ in the Bernoulli Distribution.
+$$
+P(y_{n}=y|\mathbf{x}_{n})=
+\begin{cases}
+\sigma(\mathbf{w}^\top\mathbf{x}_{n}) & \text{if} \ y=1 \\
+1-\sigma(\mathbf{w}^\top\mathbf{x}_{n}) & \text{if} \ y=0
+\end{cases}
+$$
 ### Bernoulli Distribution Modelling
 Given $\{(\mathbf{x}_{n},y_{n})|n=1,\dots,N\}$, the likelihood is given by
 $$P(\mathbf{y}|\mathbf{X},\mathbf{w})=\prod_{n=1}^{N}P(y_{n}|\mathbf{x}_{n})$$
 $$
-=\prod_{n=1}^{N}p(y_{n}=1|\mathbf{x}_{n})^{y_{n}}(1-P(y_{n}=1|\mathbf{x}_{n}))^{1-y_{n}}
+=\prod_{n=1}^{N}p(y_{n}=1|\mathbf{x}_{n})^{y_{n}}\Bigl(1-P(y_{n}=1|\mathbf{x}_{n})\Bigr)^{1-y_{n}}
 $$
-$$=\prod_{n=1}^{N}\sigma(\mathbf{w}^\top\mathbf{x}_{n})^{y_{n}}(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n}))^{1-y_{n}}$$
-
+$$=\prod_{n=1}^{N}\sigma(\mathbf{w}^\top\mathbf{x}_{n})^{y_{n}}\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)^{1-y_{n}}$$
 The log-likelihood function is thus given by:
 $$
 \mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})=\sum_{n=1}^{n}\log P(y_{n}|\mathbf{x}_{n})
 $$
 $$
-=\sum_{n=1}^{N}\Bigl[y_{n}\log\sigma_{n}+(1-y_{n})\log(1-\sigma_{n})\Bigr]
+=\sum_{n=1}^{N}\Bigl[y_{n}\log \Bigl(\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)+(1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
 $$
-where $\sigma_{n}=\sigma(\mathbf{w}^\top\mathbf{x}_{n})$.
-
 We want to maximize this log-likelihood $\mathcal{L}$. However, the calculation of the maximum of nonlinear function of $\mathbf{w}$ cannot be done in a closed form. That is, it is very costly to directly compute:
 $$
 \dfrac{\partial \mathcal{L}}{\partial \mathbf{w}}=0
 $$
 Therefore, an iterated re-weighted least squares (IRLS) is then performed, derived from the Newton's method.
 # 9.2 Math Basics
-## 9.2.1 Gradient
+## 9.2.1 Gradient 梯度
 Consider a real-valued function $f(x)$, which takes a real-valued vector $\mathbf{x}\in \mathbb{R}^d$ as an input:
 $$
 f(\mathbf{x}):\mathbb{R}^d\mapsto\mathbb{R}
@@ -71,7 +132,8 @@ $$\nabla f(\mathbf{x})=\dfrac{\partial f(\mathbf{x})}{\partial \mathbf{x}}=\begi
 \frac{\partial f}{\partial x_{d}}
 \end{bmatrix}$$
 Which is the partial derivative of $f(\mathbf{x})$ with respect to all the dimensions of $\mathbf{x}$.
-## 9.2.2 Hessian Matrix
+
+## 9.2.2 Hessian Matrix 海森矩阵
 If $f(\mathbf{x})$ belongs to the class $C^2$, the Hessian matrix $\mathbf{H}$ is defined as the symmetric matrix with the combination of any two dimensions.
 $$\mathbf{H}=\nabla^2 f(\mathbf{x})$$
 $$=\begin{bmatrix}
@@ -95,8 +157,175 @@ $$
 \nabla f(\mathbf{x})
 \end{bmatrix}^\top
 $$
-The Hessian matrix can not only help us find the extreme points of the function (through the first-order derivative is 0), but also determine whether the point is a minimum, maximum or saddle point by analyzing the curvature of the function near the extreme point. For example, if the Hessian matrix is ​​positive definite, it means that the extreme point is a local minimum.
+Namely, 
+$$
+\mathbf{H}=
+\begin{bmatrix}
+\frac{\partial f}{\partial x_{1}} \\
+\frac{\partial f}{\partial x_{2}} \\
+\vdots \\
+\frac{\partial f}{\partial x_{d}}
+\end{bmatrix}
+\begin{bmatrix}
+\frac{\partial f}{\partial x_{1}} &
+\frac{\partial f}{\partial x_{2}} &
+\cdots &
+\frac{\partial f}{\partial x_{d}}
+\end{bmatrix}
+$$
+The Hessian matrix can not only help us find the extreme points of the function (through the first-order derivative is 0), but also determine whether the point is a minimum, maximum or saddle point by analysing the curvature of the function near the extreme point. For example, if the Hessian matrix is ​​positive definite, it means that the extreme point is a local minimum.
 
 ## 9.2.3 Gradient Descent/Ascent 梯度下降、上升
+The gradient descent/ascent learning is a simple first-order iterative method for minimization/maximization.
 
+Gradient Descent: Iterative Minimization
+$$
+\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}-\eta\Bigl(\frac{\partial \mathcal{J}}{\partial \mathbf{w}}\Bigr)
+$$
+Gradient Ascent: Iterative Maximization
+$$
+\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta\Bigl(\frac{\partial \mathcal{J}}{\partial \mathbf{w}}\Bigr)
+$$
+where the learning rate $\eta>0$.
 
+## 9.2.4 Newton's Method
+The Basic idea of Newton's method is:
+- To optimize the quadratic (二次的) approximation,
+- of the objective function $\mathcal{J}(\mathbf{w})$,
+- around the current point $\mathbf{w}^{(k)}$.
+### Tayler Series of $\mathcal{J}(\mathbf{w})$
+The Taylor Series of a function $f(x): \mathbb{R}\mapsto\mathbb{R}$ around a point $a$ yields:
+$$
+f(x)=f(a)+\frac{f'(a)}{1!}(x-a)+\frac{f''(a)}{2!}(x-a)^2+\frac{f'''(a)}{3!}(x-a)^3+\cdots=\sum_{i=0}^{\infty}\frac{f^{(i)}(a)}{i!}(x-a)^i
+$$
+The second-order Taylor series expansion of $\mathcal{J}(\mathbf{w})$ at the current $\mathbf{w}^{(k)}$ gives:
+$$
+\mathcal{J}_{2}(\mathbf{w})=
+\mathcal{J}(\mathbf{w}^{(k)})+
+\begin{bmatrix}
+\nabla \mathcal{J}(\mathbf{w}^{(k)})
+\end{bmatrix}^\top(\mathbf{w}-\mathbf{w}^{(k)})+
+\frac{1}{2}\Bigl(\mathbf{w}-\mathbf{w}^{(k)}\Bigr)^\top\Bigl(\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr)(\mathbf{w}-\mathbf{w}^{(k)})
+$$
+Specifically:
+- First term: $\mathcal{J}(\mathbf{w}^{(k)})$, is the value of the target function $\mathcal{J}$ with respect to the current $\mathbf{w}^{(k)}$.
+- Second term: $\nabla\mathcal{J}(\mathbf{w}^{(k)})$ is the *gradient* of the target function at the current $\mathbf{w}^{(k)}$.
+- Third Term: $\nabla^2\mathcal{J}(\mathbf{w}^{(k)})$ is the *Hessian Matrix* describing the target function's 2nd order derivative at current $\mathbf{w}^{(k)}$.
+### Differentiation
+Differentiate the above second-order Taylor Series with respect to $\mathbf{w}$:
+$$
+\nabla\mathcal{J}(\mathbf{w})=0+\nabla\mathcal{J}(\mathbf{w}^{(k)})
++\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)})
+$$
+Set this equal to $0$:
+$$
+\nabla\mathcal{J}(\mathbf{w}^{(k)})
++\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)})=0
+$$
+$$
+\implies \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}-\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}=0
+$$
+$$
+\implies \nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}=\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}-\nabla\mathcal{J}(\mathbf{w}^{(k)})
+$$
+$$
+\implies \mathbf{w}=\mathbf{w}^{(k)}-\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}\nabla\mathcal{J}(\mathbf{w}^{(k)})
+$$
+
+# 9.3 Logistic Regression Algorithms
+Remark: We are learning a weight $\mathbf{w}$ such that:
+- The log-likelihood $\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})$ is minimize/maximized.
+- That is $\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=0$.
+
+The gradient Ascent Learning has the form
+$$
+\mathbf{w}^{\text{new}}=\mathbf{w}^{\text{old}}+\eta\Bigl(\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}\Bigr)
+$$
+## 9.3.1 Calculate Gradient
+Recall the log-likelihood:
+$$
+\mathcal{L}=\sum_{n=1}^{N}\Bigl[y_{n}\log \Bigl(\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)+(1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
+$$
+Calculate:
+$$
+\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}'}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}}{(1-\sigma_{n})}\mathbf{x}_{n}\Bigr]
+$$
+By using the 2nd and 3rd property of the logistic function $\sigma$, we obtain:
+$$
+\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}(1-\sigma_{n})}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}(1-\sigma_{n})}{1-\sigma_{n}}\mathbf{x}_{n}\Bigr]
+$$
+$$
+=\sum_{n=1}^{N}\Bigl[y_{n}(1-\sigma_{n})\mathbf{x}_{n}-(1-y_{n})\sigma_{n}\mathbf{x}_{n}\Bigr]
+$$
+$$
+=\sum_{n=1}^{N}\Bigl[y_{n}(1-\sigma_{n})-(1-y_{n})\sigma_{n}\Bigr]\mathbf{x}_{n}
+$$
+$$
+=\sum_{n=1}^{N}\Bigl[y_{n}-y_{n}\sigma_{n}-\sigma_{n}+y_{n}\sigma_{n}\Bigr]\mathbf{x}_{n}
+$$
+$$
+=\sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}
+$$
+Lastly, it could be concluded that:
+$$
+\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\mathbf{x}_{n}
+$$
+As discussed before, it is a vector with the same shape of $\mathbf{x}_{n}$.
+## 9.3.2 Calculate Hessian
+Calculate the Hessian:
+$$
+\mathbf{H}=\nabla^2\mathcal{L}
+$$
+Differentiate every term in the gradient:
+$$
+\dfrac{\partial}{\partial \mathbf{w}}(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n}))\mathbf{x_{n}}
+$$
+$$
+=\dfrac{\partial}{\partial \mathbf{w}}y_{n}\mathbf{x}_{n}-\dfrac{\partial}{\partial \mathbf{w}}\sigma_{n}\mathbf{x}_{n}
+$$
+$$
+=-\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x}_{n}^\top
+$$
+Combining all the terms:
+$$
+\nabla^2\mathcal{L}=\sum_{n=1}^{N}-\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x}_{n}^\top
+$$
+## 9.3.3 Objective Function
+Notice that the original Log-Likelihood:
+$$\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})=\sum_{n=1}^{n}\log P(y_{n}|\mathbf{x}_{n})$$
+is *negative* since the probability $P(y_{n}|\mathbf{x}_{n})$ is lower than $1$. 
+
+Therefore, we set the objective function $\mathcal{J}(\mathbf{w})$ to be the negative log-likelihood:
+$$
+\mathcal{J}(\mathbf{w})=-\mathcal{L}(\mathbf{w})=-\sum_{n=1}^{N}\Bigl[y_{n}\log \Bigl(\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)+(1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
+$$
+Therefore,
+- The gradient: $\nabla\mathcal{J}(\mathbf{w})=-\sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}$
+- The Hessian: $\nabla^2\mathcal{J}(\mathbf{w})=\sum_{n=1}^{N}\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x_{n}}^\top$
+
+Thus, the *update* part of the Newton's method $\eta\Bigl(\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}\Bigr)$ has the form:
+$$
+\Delta \mathbf{w}= - \Bigl[\sum_{n}^{N}\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x}_{n}^\top\Bigr]^{-1}\Bigl[-\sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}\Bigr]
+$$
+Namely,
+$$
+\Delta \mathbf{w} = \Bigl(\mathbf{X}S\mathbf{X}^\top\Bigr)^{-1}Sb
+$$
+where:
+- $S=\begin{bmatrix}\sigma_{1}(1-\sigma_{1}) & 0 & \cdots & 0 \\ 0 & \sigma_{2}(1-\sigma_{2}) & \cdots & 0 \\ \vdots & \vdots & \ddots & 0 \\ 0 & 0 & \cdots & \sigma_{n}(1-\sigma_{n})\end{bmatrix}$
+- $b=\begin{bmatrix}\frac{y_{1}-\sigma_{1}}{\sigma_{1}(1-\sigma_{1})}\\\frac{y_{2}-\sigma_{2}}{\sigma_{2}(1-\sigma_{2})}\\\vdots\\\frac{y_{N}-\sigma_{N}}{\sigma_{N}(1-\sigma_{N})}\end{bmatrix}$
+
+## 9.3.4 Recap: IRLS Algorithm
+**Input**
+- $\{(\mathbf{x}_{n}, y_{n})|n=1,2,\cdots,N\}$
+**Do**
+1. Initialize $\mathbf{w}=0$ and $w_{0}=\log\frac{\bar{\mathbf{y}}}{1-\bar{\mathbf{y}}}$
+2. Repeat until convergence:
+	1. for $n=1,2,\cdots,N$ do:
+		1. Compute $\sigma_{n}=\sigma(\mathbf{w}^\top\mathbf{x}_{n}+w_{0})$
+		2. Compute $s_{n}=\sigma_{n}(1-\sigma_{n})$
+		3. Compute $b_{n}=\frac{y_{n}-\sigma_{n}}{s_{n}}$
+	2. Construct $S=diag(s_{1:N})$
+	3. Update $\mathbf{w}=(XSX^\top)Sb$
+**Output**
+- $\mathbf{w}$
