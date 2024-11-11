@@ -363,3 +363,45 @@ $$
 ## 9.4.2 Likelihood Function
 
 
+# CISC3023 Assignment 3
+## 1. Question 1
+Given historical data as below. If current weights $\mathbf{w}$ for the logistic regression model (in which $P(y=1|\mathbf{{x}})=\sigma(\mathbf{{w}}^\top\mathbf{{x}})$) is $\begin{bmatrix}0\\0\end{bmatrix}$. Update $\mathbf{w}$ for one step according to the gradient ascent. The learning rate is $\eta=0.1$.
+
+| $y$ | $x_{1}$ | $x_2$ | index |
+| --- | ------- | ----- | ----- |
+| 1   | 2       | 1     | 1     |
+| 0   | 1       | 2     | 2     |
+| 0   | 3       | 3     | 3     |
+
+*Answer*:
+Use Gradient Ascend:
+$$
+\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta \sum_{t}\Bigl[y_{n}-\sigma\Bigl((\mathbf{w}^{(k)})^\top\mathbf{x}_{n}\Bigr)\Bigr]\mathbf{x}_{n}
+$$
+Summation term:
+$$
+\mathbf{w}_{1}=0.1\times\Bigl[\Bigl(1-\sigma(0)\Bigr)\begin{bmatrix}2\\1\end{bmatrix}+\Bigl(0-\sigma(0)\Bigr)\begin{bmatrix}1\\2\end{bmatrix}+\Bigl(0-\sigma(0)\Bigr)\begin{bmatrix}3\\3\end{bmatrix}\Bigr]
+$$
+$$
+=0.1\times\Bigl[\frac{1}{2}\begin{bmatrix}2\\1\end{bmatrix}-\frac{1}{2}\begin{bmatrix}1\\2\end{bmatrix}-\frac{1}{2}\begin{bmatrix}3\\3\end{bmatrix}\Bigr]
+$$
+$$
+=0.1\times\begin{bmatrix}
+1-\frac{1}{2}-\frac{3}{2} \\
+\frac{1}{2}-1-\frac{3}{2}
+\end{bmatrix}
+$$
+
+$$
+=\begin{bmatrix}
+-0.1 \\
+-0.2
+\end{bmatrix}
+$$
+That is, the updated one step of $\mathbf{w}$ is:
+$$
+\mathbf{w}_{1}=\begin{bmatrix}
+-0.1 \\
+-0.2
+\end{bmatrix}
+$$
