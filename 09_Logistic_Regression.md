@@ -108,18 +108,18 @@ $$
 $$=\prod_{n=1}^{N}\sigma(\mathbf{w}^\top\mathbf{x}_{n})^{y_{n}}\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)^{1-y_{n}}$$
 The log-likelihood function is thus given by:
 $$
-\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})=\sum_{n=1}^{n}\log P(y_{n}|\mathbf{x}_{n})
+\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})=\log\sum_{n=1}^{n}P(y_{n}|\mathbf{x}_{n})
 $$
 $$
 =\sum_{n=1}^{N}\Bigl[y_{n}\log \Bigl(\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)+(1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
 $$
-We want to maximize this log-likelihood $\mathcal{L}$. However, the calculation of the maximum of nonlinear function of $\mathbf{w}$ cannot be done in a closed form. That is, it is very costly to directly compute:
+We want to maximize this log-likelihood $\mathcal{L}$. However, $\mathcal{L}$ is not a polynomial, the calculation of the maximum of nonlinear function of $\mathbf{w}$ cannot be done in a closed form. That is, it is very costly to directly compute:
 $$
 \dfrac{\partial \mathcal{L}}{\partial \mathbf{w}}=0
 $$
 Therefore, an iterated re-weighted least squares (IRLS) is then performed, derived from the Newton's method.
 # 9.2 Math Basics
-## 9.2.1 Gradient 梯度
+## 9.2.1 Gradient 梯度: Step Direction
 Consider a real-valued function $f(x)$, which takes a real-valued vector $\mathbf{x}\in \mathbb{R}^d$ as an input:
 $$
 f(\mathbf{x}):\mathbb{R}^d\mapsto\mathbb{R}
@@ -133,7 +133,7 @@ $$\nabla f(\mathbf{x})=\dfrac{\partial f(\mathbf{x})}{\partial \mathbf{x}}=\begi
 \end{bmatrix}$$
 Which is the partial derivative of $f(\mathbf{x})$ with respect to all the dimensions of $\mathbf{x}$.
 
-## 9.2.2 Hessian Matrix 海森矩阵
+## 9.2.2 Hessian Matrix 海森矩阵: Step Size
 If $f(\mathbf{x})$ belongs to the class $C^2$, the Hessian matrix $\mathbf{H}$ is defined as the symmetric matrix with the combination of any two dimensions.
 $$\mathbf{H}=\nabla^2 f(\mathbf{x})$$
 $$=\begin{bmatrix}
@@ -188,12 +188,16 @@ $$
 $$
 where the learning rate $\eta>0$.
 
+The gradient $\dfrac{\partial\mathcal{J}}{\partial \mathbf{w}}$ gives the direction of the movement of $\mathbf{w}$. The learning rate $\eta$ gives the step size.
+
 ## 9.2.4 Newton's Method
 The Basic idea of Newton's method is:
 - To optimize the quadratic (二次的) approximation,
 - of the objective function $\mathcal{J}(\mathbf{w})$,
 - around the current point $\mathbf{w}^{(k)}$.
 ### Tayler Series of $\mathcal{J}(\mathbf{w})$
+Locally approximate the polynomial with Tayler Series at a specific step $\mathbf{w}^{(k)}$.
+
 The Taylor Series of a function $f(x): \mathbb{R}\mapsto\mathbb{R}$ around a point $a$ yields:
 $$
 f(x)=f(a)+\frac{f'(a)}{1!}(x-a)+\frac{f''(a)}{2!}(x-a)^2+\frac{f'''(a)}{3!}(x-a)^3+\cdots=\sum_{i=0}^{\infty}\frac{f^{(i)}(a)}{i!}(x-a)^i
@@ -229,8 +233,9 @@ $$
 \implies \nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}=\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}-\nabla\mathcal{J}(\mathbf{w}^{(k)})
 $$
 $$
-\implies \mathbf{w}=\mathbf{w}^{(k)}-\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}\nabla\mathcal{J}(\mathbf{w}^{(k)})
+\implies \mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}-\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}\nabla\mathcal{J}(\mathbf{w}^{(k)})
 $$
+Update the new $\mathbf{w}$ according to the approximated polynomial, finishing one step.
 
 # 9.3 Logistic Regression Algorithms
 Remark: We are learning a weight $\mathbf{w}$ such that:
@@ -248,8 +253,12 @@ $$
 $$
 Calculate:
 $$
-\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}'}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}}{(1-\sigma_{n})}\mathbf{x}_{n}\Bigr]
+\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}'}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}'}{(1-\sigma_{n})}\mathbf{x}_{n}\Bigr]
 $$
+Note that using chain rule:
+
+$\dfrac{\partial \log(\sigma(\mathbf{w}^\top\mathbf{x}_{n}))}{\partial \mathbf{w}}=\dfrac{1}{\sigma(\mathbf{w}^\top\mathbf{x}_{n})}\sigma'(\mathbf{w}^\top\mathbf{x})$
+
 By using the 2nd and 3rd property of the logistic function $\sigma$, we obtain:
 $$
 \dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}(1-\sigma_{n})}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}(1-\sigma_{n})}{1-\sigma_{n}}\mathbf{x}_{n}\Bigr]
@@ -271,6 +280,13 @@ $$
 \dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\mathbf{x}_{n}
 $$
 As discussed before, it is a vector with the same shape of $\mathbf{x}_{n}$.
+
+- [*] By now we know that we could update $\mathbf{w}$ by:
+$$
+\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta \sum_{t}\Bigl[y_{n}-\sigma\Bigl(\mathbf{(w^{(k)})^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
+$$
+> 记到这里就行了，学习率老师会给所以海森矩阵不用手算。
+
 ## 9.3.2 Calculate Hessian
 Calculate the Hessian:
 $$
@@ -292,7 +308,7 @@ $$
 $$
 ## 9.3.3 Objective Function
 Notice that the original Log-Likelihood:
-$$\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})=\sum_{n=1}^{n}\log P(y_{n}|\mathbf{x}_{n})$$
+$$\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})=\log\sum_{n=1}^{n} P(y_{n}|\mathbf{x}_{n})$$
 is *negative* since the probability $P(y_{n}|\mathbf{x}_{n})$ is lower than $1$. 
 
 Therefore, we set the objective function $\mathcal{J}(\mathbf{w})$ to be the negative log-likelihood:
@@ -329,3 +345,21 @@ where:
 	3. Update $\mathbf{w}=(XSX^\top)Sb$
 **Output**
 - $\mathbf{w}$
+
+# 9.4 Multi-Class Extension
+## 9.4.1 Model IO
+In the multi-class classification essence, we will give each class its own weight. Suppose that we have $M$ classes, the weights are:
+$$
+\{\mathbf{w}_{1}, \mathbf{w}_{2},\dots,\mathbf{w}_{M}\}
+$$
+Therefore, given an input $\mathbf{x}_{n}$, it will generate a score for each class:
+$$
+\text{scores}=\{\mathbf{w}_{1}^\top\mathbf{x}_{n},\mathbf{w}_{2}^\top\mathbf{x}_{n},\dots,\mathbf{w}_{M}^\top\mathbf{x}_{n}\}\subset \mathbb{R}
+$$
+These individual scores $\theta_{k}=\mathbf{w}_{k}^\top\mathbf{x}_{n}$ are called "Logits". We softmax these logits to make it sum to $1$:
+$$
+p(y_{n}=k|\mathbf{x}_{n})=\text{softmax}(\mathbf{w}_{k}^\top\mathbf{x}_{n})=\frac{e^{\mathbf{w}^\top\mathbf{x}_{n}}}{\sum_{j=1}^{M}e^{\mathbf{w}_{j}^\top\mathbf{x}_{n}}}
+$$
+## 9.4.2 Likelihood Function
+
+
