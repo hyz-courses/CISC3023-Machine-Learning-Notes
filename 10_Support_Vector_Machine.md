@@ -1,3 +1,6 @@
+### Final Tip:
+- Primal & Dual Problem
+- How to re-formulate Primal to Dual Problem (easier-to-solve)
 # 10.1 Hyperplane & Binary Classification
 ## 10.1.1 Binary Classification
 **Given**

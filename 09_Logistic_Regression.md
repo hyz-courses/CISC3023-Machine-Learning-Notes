@@ -1,4 +1,9 @@
 # 9.1 Binary Classification
+
+### Final Tip:
+- First Question: Similar to homework
+- Second Question: Basic idea, gradient calculation, maximum likelihood calculation
+
 ## 9.1.1 Problem Setup
 **Given**
 - Two classes $C=\{c_{1},c_{2}\}$
@@ -8,50 +13,21 @@
 	- Namely, to calculate the probability of $\mathbf{x}\in c_{i}$ for all $c_{i}\in C$.
 
 From the Bayesian Rule, we derive that
-$$P(c_{1}|\mathbf{x})=\dfrac{P(\mathbf{x}|c_{1})P(c_{1})}{P(\mathbf{x})}$$
-- $= \dfrac{P(\mathbf{x}|c_{1})P(c_{1})}{P(\mathbf{x}|c_{1})P(c_{1})+P(\mathbf{x}|c_{2})P(c_{2})}$
+$$
+\begin{align}
+P(c_{1}|\mathbf{x})&=\frac{P(\mathbf{x}|c_1)P(c_1)}{P(\mathbf{x})} \\ \\
+&=\frac{P(\mathbf{x}|c_1)P(c_1)}{P(\mathbf{x}|c_1)P(c_1)+P(\mathbf{x}|c_2)P(c_2)} \\  \\
+&=\dfrac{1}{1+\frac{P(\mathbf{x}|c_{2})P(c_{_{2}})}{P(\mathbf{x}|c_{1})P(c_{1})}} \\ \\
+&=\dfrac{1}{1+e^{-\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]-\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]}}
+\end{align}
+$$
 
-- $=\dfrac{1}{1+\frac{P(\mathbf{x}|c_{2})P(c_{_{2}})}{P(\mathbf{x}|c_{1})P(c_{1})}}$
-
-- $=\dfrac{1}{1+e^{-\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]-\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]}}$
-
-which can be written in the form of a **logistic function**:
+which can be written in the form of a **logistic function / Sigmoid Function**:
 $$P(c_{1}|\mathbf{x})=\dfrac{1}{1+e^{-\xi}}$$
 where,
 $$\xi=\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$$
 - Likelihood Ratio: $\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]$
 - Prior Ratio: $\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
-## 9.1.2 Multivariate Gaussian Distribution
-Assumed that, within each class, the  multi-variate input vector $\mathbf{x}$ follows a Gaussian Distribution with a common covariate $\Sigma$.
-$$P(\mathbf{x}|c_{i})=\dfrac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}}e^{-\dfrac{1}{2}(\mathbf{x}-\mathbf{\mu}_{i})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{i})}$$
-From which we derive that
-- $ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]$
-
-- $=\ln\Bigl[\dfrac{e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{1})}}{e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{2})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{2})}}\Bigr]$
-
-- $=\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{2})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{2})-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{1})$
-
-- $=\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}-\mathbf{\mu}_{2}^\top\Sigma^{-1})(\mathbf{x}-\mathbf{\mu}_{2})-\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}-\mathbf{\mu}_{1}^\top\Sigma^{-1})(\mathbf{x}-\mathbf{\mu}_{1})$
-
-- $=\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}\mathbf{x}-\mathbf{x}^\top\Sigma^{-1}\mathbf{\mu}_{2}-\mathbf{\mu}_{2}^\top\Sigma^{-1}\mathbf{x}+\mathbf{\mu}_{2}^\top\Sigma^{-1}\mathbf{\mu}_{2})$
-  $-\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}\mathbf{x}-\mathbf{x}^\top\Sigma^{-1}\mathbf{\mu}_{1}-\mathbf{\mu}_{1}^\top\Sigma^{-1}\mathbf{x}+\mathbf{\mu}_{1}^\top\Sigma^{-1}\mathbf{\mu}_{1})$
-
-- $=\frac{1}{2}\Bigl[\mathbf{x}^\top\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})+(\mathbf{\mu}_{1}^\top-\mathbf{\mu}_{2}^\top)\Sigma^{-1}\mathbf{x}+(\mathbf{\mu}_{2}^\top+\mathbf{\mu}_{1}^\top)\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})\Bigr]$
-
-- $=(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})^\top\Sigma^{-1}\mathbf{x}+\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})$
-
-Therefore, the exponential $\xi$ can be rewritten as:
-- $\xi=(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})^\top\Sigma^{-1}\mathbf{x}+\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
-
-- [*] $=\Bigl[\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})\Bigr]^\top\mathbf{x} +\Bigl(\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]\Bigr)$ , with $({\Sigma^{-1}})^\top=\Sigma^{-1}$ known.
-
--  $=\mathbf{w}^\top\mathbf{x}+b$
-
-In conclusion,
-$$P(c_{1}|\mathbf{x})=\dfrac{1}{1+e^{-(\mathbf{w}^\top\mathbf{x}+b)}}$$
-where
-- $\mathbf{w}=\Sigma^{-1}(\mu_{1}-\mu_{2})$, and
-- $b=\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
 ### Properties of Logistic Functions
 ```functionplot
 ---
@@ -67,10 +43,46 @@ f(x)=1/(1+E^(-x))
 1. Limits
 	1. $\lim_{ \xi \to -\infty }\sigma(\xi)=0$
 	2. $\lim_{ \xi \to \infty }\sigma(\xi)=1$
-2. Central Symmetry:
+2. Central Symmetry 中心对称:
 	1. $\sigma(-\xi)=1-\sigma(\xi)$
 3. Derivative:
-	1. $\dfrac{d\Bigl[\sigma(\xi)\Bigr]}{d\xi}=\sigma(\xi)\sigma(-\xi)=\sigma(\xi)\Bigl(1-\sigma(\xi)\Bigr)$
+	1. $\dfrac{d}{d\xi}\sigma(\xi)=\sigma(\xi)\sigma(-\xi)=\sigma(\xi)\Bigl(1-\sigma(\xi)\Bigr)$
+
+## 9.1.2 Multivariate Gaussian Distribution
+Assumed that:
+- within each class
+- the  multi-variate input vector $\mathbf{x}$ follows a Gaussian Distribution with a *common* covariate $\Sigma$.
+$$P(\mathbf{x}|c_{i})=\dfrac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}}e^{-\dfrac{1}{2}(\mathbf{x}-\mathbf{\mu}_{i})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{i})}$$
+From which we derive that
+$$
+\begin{align}
+\ln\Bigl(\frac{P(\mathbf{x}|c_1)}{P(\mathbf{x}|c_2)}\Bigr) &= \ln\Bigl[\frac{e^{-\frac{1}{2}(\mathbf{x}-\mu_1)^\top\Sigma^{-1}(\mathbf{x}-\mu_1)}}{e^{-\frac{1}{2}(\mathbf{x}-\mu_2)^\top\Sigma^{-1}(\mathbf{x}-\mu_2)}}\Bigr] \\ \\
+&=\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{2})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{2})-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{1}) \\ \\
+&=\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}-\mathbf{\mu}_{2}^\top\Sigma^{-1})(\mathbf{x}-\mathbf{\mu}_{2})-\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}-\mathbf{\mu}_{1}^\top\Sigma^{-1})(\mathbf{x}-\mathbf{\mu}_{1}) \\ \\
+&=\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}\mathbf{x}-\mathbf{x}^\top\Sigma^{-1}\mathbf{\mu}_{2}-\mathbf{\mu}_{2}^\top\Sigma^{-1}\mathbf{x}+\mathbf{\mu}_{2}^\top\Sigma^{-1}\mathbf{\mu}_{2}) \\
+&-\frac{1}{2}(\mathbf{x}^\top\Sigma^{-1}\mathbf{x}-\mathbf{x}^\top\Sigma^{-1}\mathbf{\mu}_{1}-\mathbf{\mu}_{1}^\top\Sigma^{-1}\mathbf{x}+\mathbf{\mu}_{1}^\top\Sigma^{-1}\mathbf{\mu}_{1}) \\  \\
+&=\frac{1}{2}\Bigl[\mathbf{x}^\top\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})+(\mathbf{\mu}_{1}^\top-\mathbf{\mu}_{2}^\top)\Sigma^{-1}\mathbf{x}+(\mathbf{\mu}_{2}^\top+\mathbf{\mu}_{1}^\top)\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})\Bigr] \\  \\
+&=(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})^\top\Sigma^{-1}\mathbf{x}+\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})
+\end{align}
+$$
+
+- [*] Therefore, the exponential $\xi$ can be rewritten as:
+$$
+\begin{align}
+\xi &= \ln\Bigl(\frac{P(\mathbf{x}|c_1)}{P(\mathbf{x}|c_2)}\Bigr) + \ln\Bigl(\frac{P(c_1)}{P(c_2)}\Bigr) \\ \\
+&= (\mathbf{\mu}_{1}-\mathbf{\mu}_{2})^\top\Sigma^{-1}\mathbf{x}+\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl(\frac{P(c_1)}{P(c_2)}\Bigr) \\ \\
+&=\Bigl[\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})\Bigr]^\top\mathbf{x} +\Bigl(\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]\Bigr)\\ \\
+&=\mathbf{w}^\top\mathbf{x}+b
+\end{align}
+$$
+
+In conclusion,
+$$P(c_{1}|\mathbf{x})=\dfrac{1}{1+e^{-(\mathbf{w}^\top\mathbf{x}+b)}}$$
+where
+- $\mathbf{w}=\Sigma^{-1}(\mu_{1}-\mu_{2})$, and
+- $b=\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
+
+
 ## 9.1.3 Maximum Likelihood Formulation
 ### Recall: Bernoulli Distribution
 Suppose that a variable $Y$ confronts a Bernoulli Distribution,
@@ -90,7 +102,7 @@ $$
 y_{n}=\sigma(\mathbf{w}^\top\mathbf{x}_{n})+\epsilon_{n}
 $$
 where
-$$\sigma(\xi)=\dfrac{1}{1+e^{-\xi}}$$
+$$\sigma(\xi)=\dfrac{1}{1+e^{-\xi}}=\frac{e^{\xi}}{1+e^\xi}$$
 We model input-output by a conditional Bernoulli Distribution:
 $$
 P(y_{n}=y|\mathbf{x}_{n})=
@@ -101,23 +113,26 @@ P(y_{n}=y|\mathbf{x}_{n})=
 $$
 ### Bernoulli Distribution Modelling
 Given $\{(\mathbf{x}_{n},y_{n})|n=1,\dots,N\}$, the likelihood is given by
-$$P(\mathbf{y}|\mathbf{X},\mathbf{w})=\prod_{n=1}^{N}P(y_{n}|\mathbf{x}_{n})$$
 $$
-=\prod_{n=1}^{N}p(y_{n}=1|\mathbf{x}_{n})^{y_{n}}\Bigl(1-P(y_{n}=1|\mathbf{x}_{n})\Bigr)^{1-y_{n}}
+\begin{align}
+P(\mathbf{y}|\mathbf{X},\mathbf{w}) &= \prod_{n=1}^{N}P(y_n|\mathbf{x}_n) \\ \\
+&=\prod_{n=1}^{N}P\Bigl(y_n=1|\mathbf{x}_n\Bigr)^{y_n}\cdot\Bigl(1-P(y_n=1|\mathbf{x}_n)\Bigr)^{1-y_n} \\ \\
+&=\prod_{n=1}^{N}\sigma(\mathbf{w}^\top\mathbf{x}_{n})^{y_{n}}\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)^{1-y_{n}}
+\end{align}
 $$
-$$=\prod_{n=1}^{N}\sigma(\mathbf{w}^\top\mathbf{x}_{n})^{y_{n}}\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)^{1-y_{n}}$$
 The log-likelihood function is thus given by:
 $$
-\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})=\log\sum_{n=1}^{n}P(y_{n}|\mathbf{x}_{n})
-$$
-$$
-=\sum_{n=1}^{N}\Bigl[y_{n}\log \Bigl(\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)+(1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
+\begin{align}
+\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w}) &= \log\sum_{n=1}^{N}P(y_n|\mathbf{x}_n) \\ \\
+&= \sum_{n=1}^{N}y_n\cdot\log\Bigl[\sigma(\mathbf{w}^\top\mathbf{x}_n)\Bigr]+(1-y_n)\cdot\log\Bigl[1-\sigma(\mathbf{w}^\top\mathbf{x})\Bigr]
+\end{align}
 $$
 We want to maximize this log-likelihood $\mathcal{L}$. However, $\mathcal{L}$ is not a polynomial, the calculation of the maximum of nonlinear function of $\mathbf{w}$ cannot be done in a closed form. That is, it is very costly to directly compute:
 $$
 \dfrac{\partial \mathcal{L}}{\partial \mathbf{w}}=0
 $$
 Therefore, an iterated re-weighted least squares (IRLS) is then performed, derived from the Newton's method.
+
 # 9.2 Math Basics
 ## 9.2.1 Gradient 梯度: Step Direction
 Consider a real-valued function $f(x)$, which takes a real-valued vector $\mathbf{x}\in \mathbb{R}^d$ as an input:
@@ -135,27 +150,20 @@ Which is the partial derivative of $f(\mathbf{x})$ with respect to all the dimen
 
 ## 9.2.2 Hessian Matrix 海森矩阵: Step Size
 If $f(\mathbf{x})$ belongs to the class $C^2$, the Hessian matrix $\mathbf{H}$ is defined as the symmetric matrix with the combination of any two dimensions.
-$$\mathbf{H}=\nabla^2 f(\mathbf{x})$$
-$$=\begin{bmatrix}
-\dfrac{\partial^2f(\mathbf{x})}{\partial x_{i}\partial x_{j}}
-\end{bmatrix}$$
 $$
-=\begin{bmatrix}
+\begin{align}
+\mathbf{H}&=\nabla^2 f(\mathbf{x}) \\ \\
+&=\begin{bmatrix}
+\dfrac{\partial^2f(\mathbf{x})}{\partial x_{i}\partial x_{j}}
+\end{bmatrix} \\ \\
+&=\begin{bmatrix}
 \frac{\partial^2f}{\partial x_{1}^2} & \frac{\partial^2f}{\partial x_{1}\partial x_{2}} & \cdots & \frac{\partial^2f}{\partial x_{1}\partial x_{d}} \\
 \frac{\partial^2f}{\partial x_{2}\partial x_{1}} & \frac{\partial^2f}{\partial x_{2}^2} & \cdots & \frac{\partial^2f}{\partial x_{2}\partial x_{d}} \\
 \vdots & \vdots & \ddots & \vdots \\
 \frac{\partial^2f}{\partial x_{d}\partial x_{1}} & \frac{\partial^2f}{\partial x_{d}\partial{x_{2}}} & \cdots & \frac{\partial^2f}{\partial x_{d}^2} 
-\end{bmatrix}
-$$
-$$
-=\dfrac{\partial}{\partial \mathbf{x}}\begin{bmatrix}
-\dfrac{\partial f}{\partial \mathbf{x}}
-\end{bmatrix}^\top
-$$
-$$
-=\dfrac{\partial}{\partial \mathbf{x}}\begin{bmatrix}
-\nabla f(\mathbf{x})
-\end{bmatrix}^\top
+\end{bmatrix}\\ \\
+&=\nabla f(\mathbf{x})\Bigl(\nabla f(\mathbf{x})\Bigr)^\top
+\end{align}
 $$
 Namely, 
 $$
@@ -191,8 +199,7 @@ where the learning rate $\eta>0$.
 The gradient $\dfrac{\partial\mathcal{J}}{\partial \mathbf{w}}$ gives the direction of the movement of $\mathbf{w}$. The learning rate $\eta$ gives the step size.
 
 ## 9.2.4 Newton's Method
-The Basic idea of Newton's method is:
-- To optimize the quadratic (二次的) approximation,
+The Basic idea of Newton's method is to optimize the quadratic (二次的) approximation,
 - of the objective function $\mathcal{J}(\mathbf{w})$,
 - around the current point $\mathbf{w}^{(k)}$.
 ### Tayler Series of $\mathcal{J}(\mathbf{w})$
@@ -216,26 +223,22 @@ Specifically:
 - Second term: $\nabla\mathcal{J}(\mathbf{w}^{(k)})$ is the *gradient* of the target function at the current $\mathbf{w}^{(k)}$.
 - Third Term: $\nabla^2\mathcal{J}(\mathbf{w}^{(k)})$ is the *Hessian Matrix* describing the target function's 2nd order derivative at current $\mathbf{w}^{(k)}$.
 ### Differentiation
-Differentiate the above second-order Taylor Series with respect to $\mathbf{w}$:
+Differentiate the above second-order Taylor Series with respect to $\mathbf{w}$, we get the approximation of the gradient function at the point $\mathbf{w}$:
 $$
 \nabla\mathcal{J}(\mathbf{w})=0+\nabla\mathcal{J}(\mathbf{w}^{(k)})
 +\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)})
 $$
 Set this equal to $0$:
 $$
-\nabla\mathcal{J}(\mathbf{w}^{(k)})
-+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)})=0
-$$
-$$
-\implies \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}-\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}=0
-$$
-$$
-\implies \nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}=\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}-\nabla\mathcal{J}(\mathbf{w}^{(k)})
-$$
-$$
-\implies \mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}-\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}\nabla\mathcal{J}(\mathbf{w}^{(k)})
+\begin{align}
+&\nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)}) = 0 \\ \\
+\implies& \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}-\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}=0 \\ \\
+\implies& \nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}=\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}-\nabla\mathcal{J}(\mathbf{w}) \\ \\
+\implies& \mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}-\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}\nabla\mathcal{J}(\mathbf{w}^{(k)})
+\end{align}
 $$
 Update the new $\mathbf{w}$ according to the approximated polynomial, finishing one step.
+- The Learning rate is indeed the *inverse* of the Hessian matrix.
 
 # 9.3 Logistic Regression Algorithms
 Remark: We are learning a weight $\mathbf{w}$ such that:
