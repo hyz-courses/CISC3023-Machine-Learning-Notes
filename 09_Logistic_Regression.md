@@ -4,7 +4,7 @@
 - First Question: Similar to homework
 - Second Question: Basic idea, gradient calculation, maximum likelihood calculation
 
-## 9.1.1 Logistic Function
+## 9.1.1 Logistic Function / Sigmoid Function
 **Given**
 - Two classes $C=\{c_{1},c_{2}\}$
 - A particular vector $\mathbf{x}\in \mathbb{R}^d$
@@ -22,7 +22,7 @@ P(c_{1}|\mathbf{x})&=\frac{P(\mathbf{x}|c_1)P(c_1)}{P(\mathbf{x})} \\ \\
 \end{align}
 $$
 
-which can be written in the form of a **logistic function / Sigmoid Function**:
+which can be written in the form of a **Logistic function / Sigmoid Function:**
 $$P(c_{1}|\mathbf{x})=\dfrac{1}{1+e^{-\xi}}$$
 where,
 $$\xi=\ln\Bigl[\frac{P(\mathbf{x}|c_{1})}{P(\mathbf{x}|c_{2})}\Bigr]+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$$
@@ -40,15 +40,39 @@ grid: true
 ---
 f(x)=1/(1+E^(-x))
 ```
-1. Limits
-	1. $\lim_{ \xi \to -\infty }\sigma(\xi)=0$
-	2. $\lim_{ \xi \to \infty }\sigma(\xi)=1$
-2. Central Symmetry 中心对称:
-	1. $\sigma(-\xi)=1-\sigma(\xi)$
-3. Derivative:
-	1. $\dfrac{d}{d\xi}\sigma(\xi)=\sigma(\xi)\sigma(-\xi)=\sigma(\xi)\Bigl(1-\sigma(\xi)\Bigr)$
 
-## 9.1.2 Multivariate Gaussian Distribution
+- [i] Limits
+$$
+\begin{align}
+\lim_{ \xi \to -\infty }\sigma(\xi) &=0  \\ \\
+\lim_{ \xi \to \infty }\sigma(\xi) &=1 
+\end{align}
+$$
+- [i] Central Symmetry
+$$
+\sigma(-\xi)=1-\sigma(\xi)
+$$
+- [i] Derivative
+$$
+\begin{align}
+\dfrac{d}{d\xi}\sigma(\xi) &= \sigma(\xi)(-\xi) \\
+&=\sigma(\xi)\Bigl(1-\sigma(\xi)\Bigr)
+\end{align}
+$$
+*Proof.*
+$$
+\begin{align}
+\dfrac{d}{d\xi}\sigma(\xi)&=\dfrac{d}{d\xi}\frac{1}{1+e^{-\xi}} \\ \\
+&=(\dfrac{d}{d(1+e^{-\xi})}\cdot\frac{1}{1+e^{-\xi}})\cdot\frac{d(1+e^{-\xi})}{d\xi} \\ \\
+&=\frac{-1}{(1+e^{-\xi})^2}\cdot(-e^{-\xi}) \\ \\
+&=\frac{e^{-\xi}}{(1+e^{-\xi})^2} \\ \\
+&=\frac{e^{-\xi}}{(1+e^{-\xi})}\cdot\frac{1}{(1+e^{-\xi})} \\ \\
+&=\frac{1}{1+e^{\xi}}\cdot\frac{1}{1+e^{-\xi}} \\ \\
+&=\sigma(-\xi)\cdot\sigma(\xi)
+\end{align}
+$$
+
+## 9.1.2 Multivariate Gaussian Model for $P(\mathbf{x}|c_{i})$
 Assumed that:
 - within each class
 - the  multi-variate input vector $\mathbf{x}$ follows a Gaussian Distribution with a *common* covariate $\Sigma$.
@@ -71,7 +95,7 @@ $$
 \begin{align}
 \xi &= \ln\Bigl(\frac{P(\mathbf{x}|c_1)}{P(\mathbf{x}|c_2)}\Bigr) + \ln\Bigl(\frac{P(c_1)}{P(c_2)}\Bigr) \\ \\
 &= (\mathbf{\mu}_{1}-\mathbf{\mu}_{2})^\top\Sigma^{-1}\mathbf{x}+\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl(\frac{P(c_1)}{P(c_2)}\Bigr) \\ \\
-&=\Bigl[\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})\Bigr]^\top\mathbf{x} +\Bigl(\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]\Bigr)\\ \\
+&=\Bigl[\Sigma^{-1}(\mathbf{\mu}_{1}-\mathbf{\mu}_{2})\Bigr]^\top\mathbf{x} +\Bigl[\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl(\frac{P(c_{1})}{P(c_{2})}\Bigr)\Bigr]\\ \\
 &=\mathbf{w}^\top\mathbf{x}+b
 \end{align}
 $$
@@ -82,12 +106,11 @@ where
 - $\mathbf{w}=\Sigma^{-1}(\mu_{1}-\mu_{2})$, and
 - $b=\frac{1}{2}(\mathbf{\mu}_{2}+\mathbf{\mu}_{1})^\top\Sigma^{-1}(\mathbf{\mu}_{2}-\mathbf{\mu}_{1})+\ln\Bigl[\frac{P(c_{1})}{P(c_{2})}\Bigr]$
 
-
 ## 9.1.3 Maximum Likelihood Formulation
 ### Recall: Bernoulli Distribution
 Suppose that a variable $Y$ confronts a Bernoulli Distribution,
 - i.e., $Y \sim \text{Bernoulli}(p)$
-- where $p$ is the probabilistic of being $\text{Success}$,
+- where $p$ is the probability of being $\text{Success}$,
 the probabilistic distribution function is
 $$
 P(Y=y)=
@@ -124,7 +147,7 @@ The log-likelihood function is thus given by:
 $$
 \begin{align}
 \mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w}) &= \log\sum_{n=1}^{N}P(y_n|\mathbf{x}_n) \\ \\
-&= \sum_{n=1}^{N}y_n\cdot\log\Bigl[\sigma(\mathbf{w}^\top\mathbf{x}_n)\Bigr]+(1-y_n)\cdot\log\Bigl[1-\sigma(\mathbf{w}^\top\mathbf{x})\Bigr]
+&= \sum_{n=1}^{N}\Bigl(y_n\cdot\log\Bigl[\sigma(\mathbf{w}^\top\mathbf{x}_n)\Bigr]+(1-y_n)\cdot\log\Bigl[1-\sigma(\mathbf{w}^\top\mathbf{x})\Bigr]\Bigr)
 \end{align}
 $$
 We want to maximize this log-likelihood $\mathcal{L}$. However, $\mathcal{L}$ is not a polynomial, the calculation of the maximum of nonlinear function of $\mathbf{w}$ cannot be done in a closed form. That is, it is very costly to directly compute:
@@ -264,20 +287,15 @@ $\dfrac{\partial \log(\sigma(\mathbf{w}^\top\mathbf{x}_{n}))}{\partial \mathbf{w
 
 By using the 2nd and 3rd property of the logistic function $\sigma$, we obtain:
 $$
-\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}(1-\sigma_{n})}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}(1-\sigma_{n})}{1-\sigma_{n}}\mathbf{x}_{n}\Bigr]
+\begin{align}
+\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}&=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}(1-\sigma_{n})}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}(1-\sigma_{n})}{1-\sigma_{n}}\mathbf{x}_{n}\Bigr] \\ \\
+&=\sum_{n=1}^{N}\Bigl(y_{n}(1-\sigma_{n})\mathbf{x}_{n}-(1-y_{n})\sigma_{n}\mathbf{x}_{n}\Bigr) \\ \\
+&=\sum_{n=1}^{N}\Bigl[y_{n}(1-\sigma_{n})-(1-y_{n})\sigma_{n}\Bigr]\mathbf{x}_{n} \\ \\
+&= \sum_{n=1}^{N}\Bigl(y_{n}-y_{n}\sigma_{n}-\sigma_{n}+y_{n}\sigma_{n}\Bigr)\mathbf{x}_{n} \\ \\
+&= \sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}
+\end{align}
 $$
-$$
-=\sum_{n=1}^{N}\Bigl[y_{n}(1-\sigma_{n})\mathbf{x}_{n}-(1-y_{n})\sigma_{n}\mathbf{x}_{n}\Bigr]
-$$
-$$
-=\sum_{n=1}^{N}\Bigl[y_{n}(1-\sigma_{n})-(1-y_{n})\sigma_{n}\Bigr]\mathbf{x}_{n}
-$$
-$$
-=\sum_{n=1}^{N}\Bigl[y_{n}-y_{n}\sigma_{n}-\sigma_{n}+y_{n}\sigma_{n}\Bigr]\mathbf{x}_{n}
-$$
-$$
-=\sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}
-$$
+
 Lastly, it could be concluded that:
 $$
 \dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\mathbf{x}_{n}
@@ -289,6 +307,27 @@ $$
 \mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta \sum_{t}\Bigl[y_{n}-\sigma\Bigl(\mathbf{{w^{(k)}}^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
 $$
 > 记到这里就行了，学习率老师会给所以海森矩阵不用手算。
+### Example: Gradient Calculation
+**Given:**
+- Historical data:
+	- $x_{1}=\begin{pmatrix}2\\1\end{pmatrix}, x_{2}=\begin{pmatrix}1\\2\end{pmatrix},x_{3}=\begin{pmatrix}3\\3\end{pmatrix}$
+	- $y_{1}=1,y_{2}=0,y_{3}=0$
+- Probability:
+	- $P(\mathbf{x}|\mathbf{x})=\sigma(\mathbf{w}^\top\mathbf{x})$.
+- Initial weight:
+	- $\mathbf{w}_{0}=\begin{bmatrix}0 \\ 0\end{bmatrix}$.
+- Learning rate:
+	- $\eta=0.1$
+**Do:**
+- Update weight for one step.
+$$
+\begin{align}
+\mathbf{w}_{k+1}&=\mathbf{w}_{k}+\eta \cdot \sum_{n}(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n}))\mathbf{x}_{n} \\ \\
+\mathbf{w}_{1} &=\begin{bmatrix}0\\0\end{bmatrix}+0.1\cdot \Bigl[
+(1-0.5)\begin{pmatrix}2\\1\end{pmatrix}+(0-0.5)\begin{pmatrix}1\\2\end{pmatrix}+(0-0.5)\begin{pmatrix}3\\3\end{pmatrix}
+\Bigr]
+\end{align}
+$$
 
 ## 9.3.2 Calculate Hessian
 Calculate the Hessian:
