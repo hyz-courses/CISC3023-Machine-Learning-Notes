@@ -325,7 +325,10 @@ $$
 \mathbf{w}_{k+1}&=\mathbf{w}_{k}+\eta \cdot \sum_{n}(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n}))\mathbf{x}_{n} \\ \\
 \mathbf{w}_{1} &=\begin{bmatrix}0\\0\end{bmatrix}+0.1\cdot \Bigl[
 (1-0.5)\begin{pmatrix}2\\1\end{pmatrix}+(0-0.5)\begin{pmatrix}1\\2\end{pmatrix}+(0-0.5)\begin{pmatrix}3\\3\end{pmatrix}
-\Bigr]
+\Bigr]\\ \\
+&= \begin{bmatrix}0\\0\end{bmatrix}+0.1\cdot\begin{bmatrix}1-0.5-1.5\\0.5-1-1.5\end{bmatrix}\\ \\
+&= \begin{bmatrix}0\\0\end{bmatrix}+0.1\cdot\begin{bmatrix}-1\\-2\end{bmatrix}\\ \\
+&= \begin{bmatrix}-0.1\\-0.2\end{bmatrix}
 \end{align}
 $$
 
