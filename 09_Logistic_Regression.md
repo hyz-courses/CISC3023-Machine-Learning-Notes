@@ -4,7 +4,7 @@
 - First Question: Similar to homework
 - Second Question: Basic idea, gradient calculation, maximum likelihood calculation
 
-## 9.1.1 Problem Setup
+## 9.1.1 Logistic Function
 **Given**
 - Two classes $C=\{c_{1},c_{2}\}$
 - A particular vector $\mathbf{x}\in \mathbb{R}^d$
@@ -52,7 +52,7 @@ f(x)=1/(1+E^(-x))
 Assumed that:
 - within each class
 - the  multi-variate input vector $\mathbf{x}$ follows a Gaussian Distribution with a *common* covariate $\Sigma$.
-$$P(\mathbf{x}|c_{i})=\dfrac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}}e^{-\dfrac{1}{2}(\mathbf{x}-\mathbf{\mu}_{i})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{i})}$$
+$$P(\mathbf{x}|c_{i})=\dfrac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}}e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{i})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{i})}$$
 From which we derive that
 $$
 \begin{align}
@@ -286,7 +286,7 @@ As discussed before, it is a vector with the same shape of $\mathbf{x}_{n}$.
 
 - [*] By now we know that we could update $\mathbf{w}$ by:
 $$
-\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta \sum_{t}\Bigl[y_{n}-\sigma\Bigl(\mathbf{(w^{(k)})^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
+\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta \sum_{t}\Bigl[y_{n}-\sigma\Bigl(\mathbf{{w^{(k)}}^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
 $$
 > 记到这里就行了，学习率老师会给所以海森矩阵不用手算。
 
