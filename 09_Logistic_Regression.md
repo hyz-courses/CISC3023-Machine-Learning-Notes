@@ -5,7 +5,7 @@
 - Second Question: Basic idea, gradient calculation, maximum likelihood calculation
 
 ## 9.1.1 Logistic Function / Sigmoid Function
-**Given**
+**Given:**
 - Two classes $C=\{c_{1},c_{2}\}$
 - A particular vector $\mathbf{x}\in \mathbb{R}^d$
 **Do**
@@ -75,7 +75,7 @@ $$
 ## 9.1.2 Multivariate Gaussian Model for $P(\mathbf{x}|c_{i})$
 Assumed that:
 - within each class
-- the  multi-variate input vector $\mathbf{x}$ follows a Gaussian Distribution with a *common* covariate $\Sigma$.
+- the multi-variate input vector $\mathbf{x}$ follows a Gaussian Distribution with a *common* covariate $\Sigma$.
 $$P(\mathbf{x}|c_{i})=\dfrac{1}{(2\pi)^\frac{d}{2}|\Sigma|^\frac{1}{2}}e^{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu}_{i})^\top\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}_{i})}$$
 From which we derive that
 $$
