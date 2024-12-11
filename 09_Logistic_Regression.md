@@ -156,9 +156,10 @@ $$
 $$
 Therefore, an iterated re-weighted least squares (IRLS) is then performed, derived from the Newton's method.
 
-# 9.2 Math Basics
-## 9.2.1 Gradient 梯度: Step Direction
-Consider a real-valued function $f(x)$, which takes a real-valued vector $\mathbf{x}\in \mathbb{R}^d$ as an input:
+# 9.2 Newton's Method
+## 9.2.1 Theoretical Foundations
+### Key Point 1. Gradient 梯度: Step Direction
+Consider a real-valued function $f(\mathbf{x})$, which takes a real-valued vector $\mathbf{x}\in \mathbb{R}^d$ as an input:
 $$
 f(\mathbf{x}):\mathbb{R}^d\mapsto\mathbb{R}
 $$
@@ -171,16 +172,28 @@ $$\nabla f(\mathbf{x})=\dfrac{\partial f(\mathbf{x})}{\partial \mathbf{x}}=\begi
 \end{bmatrix}$$
 Which is the partial derivative of $f(\mathbf{x})$ with respect to all the dimensions of $\mathbf{x}$.
 
-## 9.2.2 Hessian Matrix 海森矩阵: Step Size
+### Key Point 2. Hessian Matrix 海森矩阵: Step Size
 If $f(\mathbf{x})$ belongs to the class $C^2$, the Hessian matrix $\mathbf{H}$ is defined as the symmetric matrix with the combination of any two dimensions.
 $$
 \begin{align}
 \mathbf{H}&=\nabla^2 f(\mathbf{x}) 
 \\ \\
-&=\begin{bmatrix}
-\dfrac{\partial^2f(\mathbf{x})}{\partial x_{i}\partial x_{j}}
-\end{bmatrix} 
+% Partial w.r.t. w over transposed 1st order gradient %
+&= \dfrac{\partial}{\partial\mathbf{x}}\Bigl[\nabla f(\mathbf{x}) \Bigr]^\top
 \\ \\
+% Expanded First-order gradient% 
+&= \dfrac{\partial}{\partial\mathbf{x}}
+\begin{bmatrix}
+\dfrac{\partial f(\mathbf{x})}{\partial x_1}
+&
+\dfrac{\partial f(\mathbf{x})}{\partial x_2}
+&
+\cdots
+&
+\dfrac{\partial f(\mathbf{x})}{\partial x_d}
+\end{bmatrix}
+\\ \\
+% Fully-Expanded Matrix Form %
 &=\begin{bmatrix}
 \frac{\partial^2f}{\partial x_{1}^2} & 
 \frac{\partial^2f}{\partial x_{1}\partial x_{2}} & 
@@ -196,29 +209,12 @@ $$
 \cdots & 
 \frac{\partial^2f}{\partial x_{d}^2} 
 \end{bmatrix}
-\\ \\
-&=\dfrac{\partial}{\partial\mathbf{x}}\Bigl(\nabla f(\mathbf{x})\Bigr)^\top
 \end{align}
 $$
-Namely, 
-$$
-\mathbf{H}=
-\begin{bmatrix}
-\frac{\partial f}{\partial x_{1}} \\
-\frac{\partial f}{\partial x_{2}} \\
-\vdots \\
-\frac{\partial f}{\partial x_{d}}
-\end{bmatrix}
-\begin{bmatrix}
-\frac{\partial f}{\partial x_{1}} &
-\frac{\partial f}{\partial x_{2}} &
-\cdots &
-\frac{\partial f}{\partial x_{d}}
-\end{bmatrix}
-$$
-The Hessian matrix can not only help us find the extreme points of the function (through the first-order derivative is 0), but also determine whether the point is a minimum, maximum or saddle point by analysing the curvature of the function near the extreme point. For example, if the Hessian matrix is ​​positive definite, it means that the extreme point is a local minimum.
 
-## 9.2.3 Gradient Descent/Ascent 梯度下降、上升
+>The Hessian matrix can not only help us find the extreme points of the function (through the first-order derivative is 0), but also determine whether the point is a minimum, maximum or saddle point by analyzing the curvature of the function near the extreme point. For example, if the Hessian matrix is ​​positive definite, it means that the extreme point is a local minimum.
+
+### Key Point 3. Gradient Descent/Ascent 梯度下降、上升
 The gradient descent/ascent learning is a simple first-order iterative method for minimization/maximization.
 
 Gradient Descent: Iterative Minimization
@@ -233,60 +229,120 @@ where the learning rate $\eta>0$.
 
 The gradient $\dfrac{\partial\mathcal{J}}{\partial \mathbf{w}}$ gives the direction of the movement of $\mathbf{w}$. The learning rate $\eta$ gives the step size.
 
-## 9.2.4 Newton's Method
+## 9.2.2 Newton's Method
 The Basic idea of Newton's method is to optimize the quadratic (二次的) approximation,
 - of the objective function $\mathcal{J}(\mathbf{w})$,
 - around the current point $\mathbf{w}^{(k)}$.
-### Tayler Series of $\mathcal{J}(\mathbf{w})$
-Locally approximate the polynomial with Tayler Series at a specific step $\mathbf{w}^{(k)}$.
 
+The Newton's Method tells us that, for an arbitrary function $\mathcal{J}: \mathbb{R}^D\mapsto\mathbb{R}$, we can iteratively approximate $\dfrac{\partial\mathcal{J}(\mathbf{w})}{\partial\mathbf{w}}=0$ by:
+$$
+\mathbf{w}^{\text{new}}
+=
+\mathbf{w}^{\text{old}}
+-
+\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{\text{old}})\Bigr]
+\cdot
+\nabla\mathcal{J}(\mathbf{w}^{\text{old}})
+$$
+### Key Point 1. Tayler Series of $\mathcal{J}(\mathbf{w})$
+ - [i] The objective of using Taylor Series of $\mathcal{J}(\mathbf{w})$ is to:
+- Locally approximate the polynomial with Tayler Series at a specific step $\mathbf{w}^{(k)}$.
 The Taylor Series of a function $f(x): \mathbb{R}\mapsto\mathbb{R}$ around a point $a$ yields:
 $$
-f(x)=f(a)+\frac{f'(a)}{1!}(x-a)+\frac{f''(a)}{2!}(x-a)^2+\frac{f'''(a)}{3!}(x-a)^3+\cdots=\sum_{i=0}^{\infty}\frac{f^{(i)}(a)}{i!}(x-a)^i
+\begin{align}
+f(x)
+&=
+f(a)+\frac{f'(a)}{1!}(x-a)
++\frac{f''(a)}{2!}(x-a)^2
++\frac{f'''(a)}{3!}(x-a)^3
++\cdots
+\\ \\
+&=
+\sum_{i=0}^{\infty}\frac{f^{(i)}(a)}{i!}(x-a)^i
+\end{align}
 $$
 Now we consider an abstract function $\mathcal{J}(\mathbf{w})$.
 $$
 \mathcal{J}:\mathbb{R}^D\mapsto\mathbb{R}
 $$
 The second-order Taylor series expansion of $\mathcal{J}(\mathbf{w})$ at the current $\mathbf{w}^{(k)}$ gives:
+
 $$
 \mathcal{J}_{2}(\mathbf{w})=
-\mathcal{J}(\mathbf{w}^{(k)})+
+% First Term %
+\mathcal{J}(\mathbf{w}^{(k)})
++
+% Second Term %
 \begin{bmatrix}
 \nabla \mathcal{J}(\mathbf{w}^{(k)})
-\end{bmatrix}^\top(\mathbf{w}-\mathbf{w}^{(k)})+
-\frac{1}{2}\Bigl(\mathbf{w}-\mathbf{w}^{(k)}\Bigr)^\top\Bigl(\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr)(\mathbf{w}-\mathbf{w}^{(k)})
+\end{bmatrix}^\top(\mathbf{w}-\mathbf{w}^{(k)})
++
+% Third Term %
+\frac{1}{2}(\mathbf{w}-\mathbf{w}^{(k)})^\top\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr](\mathbf{w}-\mathbf{w}^{(k)})
 $$
+
 Specifically:
 - First term: $\mathcal{J}(\mathbf{w}^{(k)})$, is the value of the target function $\mathcal{J}$ with respect to the current $\mathbf{w}^{(k)}$.
 - Second term: $\nabla\mathcal{J}(\mathbf{w}^{(k)})$ is the *gradient* of the target function at the current $\mathbf{w}^{(k)}$.
 - Third Term: $\nabla^2\mathcal{J}(\mathbf{w}^{(k)})$ is the *Hessian Matrix* describing the target function's 2nd order derivative at current $\mathbf{w}^{(k)}$.
-### Differentiation
+
+### Key Point 2. Differentiation of $2^{\text{nd}}$ order Taylor Series
 Differentiate the above second-order Taylor Series with respect to $\mathbf{w}$, we get the approximation of the gradient function at the point $\mathbf{w}$:
 $$
 \nabla\mathcal{J}(\mathbf{w})=0+\nabla\mathcal{J}(\mathbf{w}^{(k)})
 +\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)})
 $$
-Set this equal to $0$:
+Remember that $\nabla\mathcal{J}(\mathbf{w})\in\mathbb{R}^d$. Set the gradient equal to $\mathbb{0}^d$:
 $$
 \begin{align}
-&\dfrac{\partial\mathcal{J}}{\partial\mathbf{w}}=0
+&&\dfrac{\partial\mathcal{J}}{\partial\mathbf{w}} &= 0
 \\ \\
-\implies& \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)}) = 0 
+&\implies \quad &
+0 &= \nabla\mathcal{J}(\mathbf{w}^{(k)})
++
+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\cdot(\mathbf{w}-\mathbf{w}^{(k)}) 
 \\ \\
-\implies& \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}-\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}=0 
+&\implies \quad &
+0 &= 
+\nabla\mathcal{J}(\mathbf{w}^{(k)})
++
+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\cdot\mathbf{w}-\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\cdot\mathbf{w}^{(k)} 
 \\ \\
-\implies& \nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}=\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}-\nabla\mathcal{J}(\mathbf{w}) \\ \\
-\implies& \mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}-\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}\nabla\mathcal{J}(\mathbf{w}^{(k)})
+&\implies \quad &
+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w} &= \nabla^2\mathcal{J}(\mathbf{w}^{(k)})\cdot\mathbf{w}^{(k)}
+-
+\nabla\mathcal{J}(\mathbf{w}) 
+\\ \\
+&\implies \quad &
+\mathbf{w}^{(k+1)}
+&=
+\mathbf{w}^{(k)}
+-
+\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}
+\cdot
+\nabla\mathcal{J}(\mathbf{w}^{(k)})
 \end{align}
 $$
-Update the new $\mathbf{w}$ according to the approximated polynomial, finishing one step.
-- The Learning rate is indeed the *inverse* of the Hessian matrix.
+
+> Note that the learning rate here is the inverse Hessian matrix.
+
+At this point, we conclude that, for an arbitrary function $\mathcal{J}$ that maps a $d$-dimensional vector to a scalar. 
+
+We can compute the *optimal vector* that produces the *optimum scalar* by:
+1. Calculate its gradient at the current step.
+2. Calculate its Hessian at current step.
+3. Apply Newton's method to get the vector of the next step.
 
 # 9.3 Logistic Regression Algorithms
-Remark: We are learning a weight $\mathbf{w}$ such that:
-- The log-likelihood $\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})$ is minimize/maximized.
-- That is $\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=0$.
+- [I] Remark: We have already computed the log-likelihood $\mathcal{L}(\mathbf{y}|\mathbf{X},\mathbf{w})$ under the given data set $\mathbf{X},\mathbf{y}$.
+
+Here, $\mathcal{L}$ is an example of the abstract function $\mathcal{J}$ since:
+$$
+\mathcal{L}: \mathbb{R}^d (\text{weight } \mathbf{w})\mapsto\mathbb{R} (\text{Probability})
+$$
+- We need to find an optimal vector that produces the maximum scalar.
+- But calculating $\dfrac{\partial\mathcal{L}}{\partial\mathcal{w}}$ is very costly.
+- Therefore, we could have a work-around using Newton's method.
 
 The gradient Ascent Learning has the form
 $$
@@ -300,7 +356,7 @@ $$
 +
 (1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
 $$
-Calculate:
+Take its first order derivative as the gradient:
 $$
 \dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}'}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}'}{(1-\sigma_{n})}\mathbf{x}_{n}\Bigr]
 $$
@@ -352,12 +408,11 @@ As discussed before, it is a vector with the same shape of $\mathbf{x}_{n}$.
 - [*] By now we know that we could update $\mathbf{w}$ by:
 $$
 \mathbf{w}^{(k+1)}
-=
-\mathbf{w}^{(k)}
-+
-\eta \cdot \sum_{n=1}^{N}\Bigl[y_{n}-\sigma\Bigl(\mathbf{{w^{(k)}}^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
+=\mathbf{w}^{(k)}+\eta \cdot \sum_{n=1}^{N}\Bigl[y_{n}-\sigma\Bigl(\mathbf{{w^{(k)}}^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
 $$
+
 > 记到这里就行了，学习率老师会给所以海森矩阵不用手算。
+
 ### Example: Gradient Calculation
 **Given:**
 - Historical data:
@@ -394,7 +449,7 @@ $$
 \mathbf{H}
 &= \nabla^2\mathcal{L}
 \\ \\
-&= \dfrac{\partial}{\partial\mathbf{w}}\Bigl(\sum_{n=1}^{N}(y_n-\sigma_n)\mathbf{x}_n \Bigr)^\top
+&= \dfrac{\partial}{\partial\mathbf{w}}\Bigl[\sum_{n=1}^{N}(y_n-\sigma_n)\mathbf{x}_n \Bigr]^\top
 \\ \\
 &= \dfrac{\partial}{\partial\mathbf{w}}\sum_{n=1}^{N}(y_n-\sigma_n)\mathbf{x}_n^\top
 \\ \\
@@ -422,17 +477,56 @@ Therefore,
 - The gradient: $\nabla\mathcal{J}(\mathbf{w})=-\sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}$
 - The Hessian: $\nabla^2\mathcal{J}(\mathbf{w})=\sum_{n=1}^{N}\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x_{n}}^\top$
 
-Thus, the *update* part of the Newton's method $\eta\Bigl(\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}\Bigr)$ has the form:
+The optimization problem went from:
+- Maximizing $\mathcal{L}$
+- to minimizing $-\mathcal{L}$
+
+Therefore, we use gradient descent:
+$$
+\mathbf{w}^{\text{new}} = \mathbf{w}^{\text{old}}-\eta\cdot\dfrac{\partial (-\mathcal{L})}{\partial\mathbf{w}}
+$$
+
+The *update* part of the Newton's method $\eta\Bigl(\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}\Bigr)$ has the form:
 $$
 \Delta \mathbf{w}= - \Bigl[\sum_{n}^{N}\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x}_{n}^\top\Bigr]^{-1}\Bigl[-\sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}\Bigr]
 $$
 Namely,
 $$
-\Delta \mathbf{w} = \Bigl(\mathbf{X}S\mathbf{X}^\top\Bigr)^{-1}Sb
+\Delta \mathbf{w} 
+= 
+\Bigl(
+\mathbf{X} \ 
+S \ 
+\mathbf{X}^\top\Bigr)^{-1}
+Sb
 $$
 where:
-- $S=\begin{bmatrix}\sigma_{1}(1-\sigma_{1}) & 0 & \cdots & 0 \\ 0 & \sigma_{2}(1-\sigma_{2}) & \cdots & 0 \\ \vdots & \vdots & \ddots & 0 \\ 0 & 0 & \cdots & \sigma_{n}(1-\sigma_{n})\end{bmatrix}$
-- $b=\begin{bmatrix}\frac{y_{1}-\sigma_{1}}{\sigma_{1}(1-\sigma_{1})}\\\frac{y_{2}-\sigma_{2}}{\sigma_{2}(1-\sigma_{2})}\\\vdots\\\frac{y_{N}-\sigma_{N}}{\sigma_{N}(1-\sigma_{N})}\end{bmatrix}$
+$$
+\begin{align}
+\\ \\
+\mathbf{X}
+&=
+\begin{bmatrix}
+- & \mathbf{x}_1^\top & - \\
+- & \mathbf{x}_2^\top & - \\
+& \vdots & \\
+- & \mathbf{x}_d^\top & -
+\end{bmatrix}
+\\ \\
+S 
+&=
+\begin{bmatrix}
+\sigma_{1}(1-\sigma_{1}) & 0 & \cdots & 0 \\ 
+0 & \sigma_{2}(1-\sigma_{2}) & \cdots & 0 \\
+\vdots & \vdots & \ddots & 0 \\ 
+0 & 0 & \cdots & \sigma_{n}(1-\sigma_{n})
+\end{bmatrix}
+\\ \\
+b
+&=
+\begin{bmatrix}\frac{y_{1}-\sigma_{1}}{\sigma_{1}(1-\sigma_{1})}\\\frac{y_{2}-\sigma_{2}}{\sigma_{2}(1-\sigma_{2})}\\\vdots\\\frac{y_{N}-\sigma_{N}}{\sigma_{N}(1-\sigma_{N})}\end{bmatrix}
+\end{align}
+$$
 
 ## 9.3.4 Recap: IRLS Algorithm
 **Input**
@@ -464,7 +558,7 @@ $$
 p(y_{n}=k|\mathbf{x}_{n})=\text{softmax}(\mathbf{w}_{k}^\top\mathbf{x}_{n})=\frac{e^{\mathbf{w}^\top\mathbf{x}_{n}}}{\sum_{j=1}^{M}e^{\mathbf{w}_{j}^\top\mathbf{x}_{n}}}
 $$
 ## 9.4.2 Likelihood Function
-
+....
 
 # CISC3023 Assignment 3
 ## 1. Question 1
@@ -479,7 +573,11 @@ Given historical data as below. If current weights $\mathbf{w}$ for the logistic
 *Answer*:
 Use Gradient Ascend:
 $$
-\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta \sum_{t}\Bigl[y_{n}-\sigma\Bigl((\mathbf{w}^{(k)})^\top\mathbf{x}_{n}\Bigr)\Bigr]\mathbf{x}_{n}
+\mathbf{w}^{(k+1)}
+=
+\mathbf{w}^{(k)}
++
+\eta \cdot \sum_{n=1}^{3}\Bigl[y_{n}-\sigma\Bigl((\mathbf{w}^{(k)})^\top\mathbf{x}_{n}\Bigr)\Bigr]\mathbf{x}_{n}
 $$
 Summation term:
 $$
