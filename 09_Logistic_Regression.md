@@ -175,17 +175,29 @@ Which is the partial derivative of $f(\mathbf{x})$ with respect to all the dimen
 If $f(\mathbf{x})$ belongs to the class $C^2$, the Hessian matrix $\mathbf{H}$ is defined as the symmetric matrix with the combination of any two dimensions.
 $$
 \begin{align}
-\mathbf{H}&=\nabla^2 f(\mathbf{x}) \\ \\
+\mathbf{H}&=\nabla^2 f(\mathbf{x}) 
+\\ \\
 &=\begin{bmatrix}
 \dfrac{\partial^2f(\mathbf{x})}{\partial x_{i}\partial x_{j}}
-\end{bmatrix} \\ \\
+\end{bmatrix} 
+\\ \\
 &=\begin{bmatrix}
-\frac{\partial^2f}{\partial x_{1}^2} & \frac{\partial^2f}{\partial x_{1}\partial x_{2}} & \cdots & \frac{\partial^2f}{\partial x_{1}\partial x_{d}} \\
-\frac{\partial^2f}{\partial x_{2}\partial x_{1}} & \frac{\partial^2f}{\partial x_{2}^2} & \cdots & \frac{\partial^2f}{\partial x_{2}\partial x_{d}} \\
+\frac{\partial^2f}{\partial x_{1}^2} & 
+\frac{\partial^2f}{\partial x_{1}\partial x_{2}} & 
+\cdots & 
+\frac{\partial^2f}{\partial x_{1}\partial x_{d}} 
+\\
+\frac{\partial^2f}{\partial x_{2}\partial x_{1}} & \frac{\partial^2f}{\partial x_{2}^2} &
+\cdots & 
+\frac{\partial^2f}{\partial x_{2}\partial x_{d}} 
+\\
 \vdots & \vdots & \ddots & \vdots \\
-\frac{\partial^2f}{\partial x_{d}\partial x_{1}} & \frac{\partial^2f}{\partial x_{d}\partial{x_{2}}} & \cdots & \frac{\partial^2f}{\partial x_{d}^2} 
-\end{bmatrix}\\ \\
-&=\nabla f(\mathbf{x})\Bigl(\nabla f(\mathbf{x})\Bigr)^\top
+\frac{\partial^2f}{\partial x_{d}\partial x_{1}} & \frac{\partial^2f}{\partial x_{d}\partial{x_{2}}} & 
+\cdots & 
+\frac{\partial^2f}{\partial x_{d}^2} 
+\end{bmatrix}
+\\ \\
+&=\dfrac{\partial}{\partial\mathbf{x}}\Bigl(\nabla f(\mathbf{x})\Bigr)^\top
 \end{align}
 $$
 Namely, 
@@ -232,6 +244,10 @@ The Taylor Series of a function $f(x): \mathbb{R}\mapsto\mathbb{R}$ around a poi
 $$
 f(x)=f(a)+\frac{f'(a)}{1!}(x-a)+\frac{f''(a)}{2!}(x-a)^2+\frac{f'''(a)}{3!}(x-a)^3+\cdots=\sum_{i=0}^{\infty}\frac{f^{(i)}(a)}{i!}(x-a)^i
 $$
+Now we consider an abstract function $\mathcal{J}(\mathbf{w})$.
+$$
+\mathcal{J}:\mathbb{R}^D\mapsto\mathbb{R}
+$$
 The second-order Taylor series expansion of $\mathcal{J}(\mathbf{w})$ at the current $\mathbf{w}^{(k)}$ gives:
 $$
 \mathcal{J}_{2}(\mathbf{w})=
@@ -254,8 +270,12 @@ $$
 Set this equal to $0$:
 $$
 \begin{align}
-&\nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)}) = 0 \\ \\
-\implies& \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}-\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}=0 \\ \\
+&\dfrac{\partial\mathcal{J}}{\partial\mathbf{w}}=0
+\\ \\
+\implies& \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})(\mathbf{w}-\mathbf{w}^{(k)}) = 0 
+\\ \\
+\implies& \nabla\mathcal{J}(\mathbf{w}^{(k)})+\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}-\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}=0 
+\\ \\
 \implies& \nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}=\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\mathbf{w}^{(k)}-\nabla\mathcal{J}(\mathbf{w}) \\ \\
 \implies& \mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}-\Bigl[\nabla^2\mathcal{J}(\mathbf{w}^{(k)})\Bigr]^{-1}\nabla\mathcal{J}(\mathbf{w}^{(k)})
 \end{align}
@@ -275,36 +295,67 @@ $$
 ## 9.3.1 Calculate Gradient
 Recall the log-likelihood:
 $$
-\mathcal{L}=\sum_{n=1}^{N}\Bigl[y_{n}\log \Bigl(\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)+(1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
+\mathcal{L}=
+\sum_{n=1}^{N}\Bigl[y_{n}\log \sigma(\mathbf{w}^\top\mathbf{x}_{n})
++
+(1-y_{n})\log\Bigl(1-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\Bigr]
 $$
 Calculate:
 $$
 \dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}'}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}'}{(1-\sigma_{n})}\mathbf{x}_{n}\Bigr]
 $$
 Note that using chain rule:
-
-$\dfrac{\partial \log(\sigma(\mathbf{w}^\top\mathbf{x}_{n}))}{\partial \mathbf{w}}=\dfrac{1}{\sigma(\mathbf{w}^\top\mathbf{x}_{n})}\sigma'(\mathbf{w}^\top\mathbf{x})$
+$$
+\begin{align}
+\dfrac{\partial}{\partial \mathbf{w}} \log\sigma(\mathbf{w}^\top\mathbf{x}_{n})
+&=
+\dfrac{\partial \mathcal{L}}{\partial\sigma}
+\cdot
+\dfrac{\partial\sigma}{\partial(\mathbf{w}^\top\mathbf{x}_n)}
+\cdot
+\dfrac{\partial\mathbf{w}^\top\mathbf{x}_n}{\partial\mathbf{w}}
+\\ \\
+&= 
+\dfrac{1}{\sigma(\mathbf{w}^\top\mathbf{x}_{n})}
+\cdot
+\sigma'(\mathbf{w}^\top\mathbf{x}_n)
+\cdot
+\mathbf{x}_n
+\end{align}
+$$
 
 By using the 2nd and 3rd property of the logistic function $\sigma$, we obtain:
 $$
 \begin{align}
-\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}&=\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}(1-\sigma_{n})}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}(1-\sigma_{n})}{1-\sigma_{n}}\mathbf{x}_{n}\Bigr] \\ \\
-&=\sum_{n=1}^{N}\Bigl(y_{n}(1-\sigma_{n})\mathbf{x}_{n}-(1-y_{n})\sigma_{n}\mathbf{x}_{n}\Bigr) \\ \\
-&=\sum_{n=1}^{N}\Bigl[y_{n}(1-\sigma_{n})-(1-y_{n})\sigma_{n}\Bigr]\mathbf{x}_{n} \\ \\
-&= \sum_{n=1}^{N}\Bigl(y_{n}-y_{n}\sigma_{n}-\sigma_{n}+y_{n}\sigma_{n}\Bigr)\mathbf{x}_{n} \\ \\
-&= \sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n}
+\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}
+&=
+\sum_{n=1}^{N}\Bigl[y_{n}\frac{\sigma_{n}(1-\sigma_{n})}{\sigma_{n}}\mathbf{x}_{n}+(1-y_{n})\frac{-\sigma_{n}(1-\sigma_{n})}{1-\sigma_{n}}\mathbf{x}_{n}\Bigr] 
+\\ \\
+&=\sum_{n=1}^{N}\Bigl(y_{n}(1-\sigma_{n})\mathbf{x}_{n}-(1-y_{n})\sigma_{n}\mathbf{x}_{n}\Bigr)
+\\ \\
+&=\sum_{n=1}^{N}\Bigl[y_{n}(1-\sigma_{n})-(1-y_{n})\sigma_{n}\Bigr]\mathbf{x}_{n}
+\\ \\
+&= \sum_{n=1}^{N}\Bigl(y_{n}-y_{n}\sigma_{n}-\sigma_{n}+y_{n}\sigma_{n}\Bigr)\mathbf{x}_{n} 
+\\ \\
+&= \sum_{n=1}^{N}(y_{n}-\sigma_{n})\mathbf{x}_{n} \in\mathbb{R}^D
 \end{align}
 $$
 
 Lastly, it could be concluded that:
 $$
-\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}=\sum_{n=1}^{N}\Bigl(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\mathbf{x}_{n}
+\dfrac{\partial\mathcal{L}}{\partial \mathbf{w}}
+=
+\sum_{n=1}^{N}\Bigl(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n})\Bigr)\mathbf{x}_{n}
 $$
 As discussed before, it is a vector with the same shape of $\mathbf{x}_{n}$.
 
 - [*] By now we know that we could update $\mathbf{w}$ by:
 $$
-\mathbf{w}^{(k+1)}=\mathbf{w}^{(k)}+\eta \sum_{t}\Bigl[y_{n}-\sigma\Bigl(\mathbf{{w^{(k)}}^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
+\mathbf{w}^{(k+1)}
+=
+\mathbf{w}^{(k)}
++
+\eta \cdot \sum_{n=1}^{N}\Bigl[y_{n}-\sigma\Bigl(\mathbf{{w^{(k)}}^\top\mathbf{x}_{n}}\Bigr)\Bigr]\mathbf{x}_{n}
 $$
 > 记到这里就行了，学习率老师会给所以海森矩阵不用手算。
 ### Example: Gradient Calculation
@@ -339,15 +390,22 @@ $$
 $$
 Differentiate every term in the gradient:
 $$
-\dfrac{\partial}{\partial \mathbf{w}}(y_{n}-\sigma(\mathbf{w}^\top\mathbf{x}_{n}))\mathbf{x_{n}}
+\begin{align}
+\mathbf{H}
+&= \nabla^2\mathcal{L}
+\\ \\
+&= \dfrac{\partial}{\partial\mathbf{w}}\Bigl(\sum_{n=1}^{N}(y_n-\sigma_n)\mathbf{x}_n \Bigr)^\top
+\\ \\
+&= \dfrac{\partial}{\partial\mathbf{w}}\sum_{n=1}^{N}(y_n-\sigma_n)\mathbf{x}_n^\top
+\\ \\
+&= \sum_{n=1}^{N}\dfrac{\partial}{\partial\mathbf{w}}(y_n-\sigma_n)\mathbf{x}_n^\top
+\\ \\
+&= \sum_{n=1}^{N}-\sigma_n'\mathbf{x}_n^\top
+\\ \\
+&= \sum_{n=1}^{N}-\sigma_n(1-\sigma_n)\mathbf{x}_n\mathbf{x}_n^\top
+\end{align}
 $$
-$$
-=\dfrac{\partial}{\partial \mathbf{w}}y_{n}\mathbf{x}_{n}-\dfrac{\partial}{\partial \mathbf{w}}\sigma_{n}\mathbf{x}_{n}
-$$
-$$
-=-\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x}_{n}^\top
-$$
-Combining all the terms:
+In general:
 $$
 \nabla^2\mathcal{L}=\sum_{n=1}^{N}-\sigma_{n}(1-\sigma_{n})\mathbf{x}_{n}\mathbf{x}_{n}^\top
 $$
