@@ -65,17 +65,17 @@ Suppose that number of neurons is $M$, number of input is $N$.
 $$
 \begin{align}
 \mathbf{W}^{(0)} &= \begin{bmatrix}
-- & \mathbf{w}_{01}^\top & - \\
-- & \mathbf{w}_{02}^\top & - \\
+- & {\mathbf{w}_{1}^{(0)}}^\top & - \\
+- & {\mathbf{w}_{2}^{(0)}}^\top & - \\
 &\vdots& \\
-- & \mathbf{w}_{0M}^\top & - \\
+- & {\mathbf{w}_{M}^{(0)}}^\top & - \\
 \end{bmatrix}, \ \mathbf{w}_{0i}\in\mathbb{R}^N
 \\ \\
 &=\begin{bmatrix}
-w_{01,1} & w_{01,2} & \cdots & w_{01,N} \\
-w_{02,1} & w_{02,2} & \cdots & w_{02,N} \\
+w_{11}^{(0)} & w_{12}^{(0)} & \cdots & w_{1N}^{(0)} \\
+w_{21}^{(0)} & w_{22}^{(0)} & \cdots & w_{2N}^{(0)} \\
 \vdots & \vdots & \ddots & \vdots \\
-w_{0M,1} & w_{0M,2} & \cdots & w_{0M,N}
+w_{M1}^{(0)} & w_{M2}^{(0)} & \cdots & w_{MN}^{(0)}
 \end{bmatrix}\in\mathbb{R}^M\times\mathbb{R}^N
 \\ \\
 \mathbf{b} &= \begin{bmatrix}
@@ -90,23 +90,49 @@ $$
 #### Step 2.1 Activation
 The output is given by:
 $$
-y_{i}^{(t)} = f(\mathbf{W}^{(t)}\mathbf{x}_i-\mathbf{b})\in\mathbb{R}^M
+\mathbf{y}_{t+1} = f(\mathbf{W}^{(t)}\mathbf{x}_{t+1}-\mathbf{b})\in\mathbb{R}^M
 $$
 where $f$ is the activation function.
 #### Step 2.2 Learning
 The  change in weights:
 $$
 \begin{align}
-\Delta\mathbf{W}^{(t)} &= \eta\cdot(y_{i}^{(t)}\cdot\mathbf{x}_i^\top)-\phi\cdot\mathbf{W}^{(t)} 
+\Delta\mathbf{W}^{(t)} 
+&= 
+\eta
+\cdot
+(\mathbf{y}_{t+1}\mathbf{x}_{t+1}^\top)-\phi \cdot \text{diag}(\mathbf{y}_{t+1}) \cdot \mathbf{W}^{(t)} 
 \\ \\
 \mathbf{W}^{(t+1)} &= \mathbf{W}^{(t)}+\Delta\mathbf{W}^{(t)}
 \end{align}
 $$
+
 where $\eta$ is the learning rate, $\phi$ is the decay factor.
 Note that:
 $$
 \Delta\mathbf{W}^{(t)}\in\mathbb{R}^{M}\times\mathbb{R}^{N}
 $$
+
+And,
+$$
+\begin{align}
+\text{Given: } \mathbf{y}_{t+1}
+&= 
+\begin{bmatrix}
+y_1 \\ y_2 \\ \vdots \\ y_M
+\end{bmatrix}
+\\ \\
+\text{diag}(\mathbf{y}_{t+1})
+&=
+\begin{bmatrix}
+y_1 & 0 & \cdots & 0 \\
+0 & y_2 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & y_M
+\end{bmatrix} \in\mathbb{R}^M\times \mathbb{R}^{M}
+\end{align}
+$$
+
 
 ## 12.1.4 Hebbian Learning Example
 **Given:**

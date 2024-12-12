@@ -1,8 +1,9 @@
 # 11.1 Single Perceptron
 ## 11.1.1 Basics
-- [i] The neuron is an *abstract* concept of a  simple computing unit. 
+- [i] The neuron is an *abstract* concept of a simple computing unit. 
 1. Compute weighted sum of inputs.
 2. Activate the weighted sum with activation function.
+3. Output the activated weighted sum.
 
 - [i] Perceptron (Frank Rosenblatt, 1958)
 - Simplest form of neural network.
@@ -13,7 +14,7 @@ The single perceptron could be described with three key components:
 2. Threshold $\theta\in\mathbb{R}$.
 3. Activation function $f$.
 
-The activation of a perceptron is:
+Given an input $\mathbf{x}\in\mathbb{R}^D$, the activation or output of a perceptron is:
 $$
 Y=f(\mathbf{w}^\top\mathbf{x}-\theta)
 $$
@@ -52,7 +53,7 @@ $$
 
 
 # 11.2 Multi-Level Perceptrons
-- [i] The input data may not be linearly-separable.
+- [i] The input data may not be linearly-separable by a single hyperplane.
 - That is, there's some classification tasks that can not be done by a single perceptron.
 
 ## 11.2.1 XOR Problem: Illustration
@@ -224,7 +225,11 @@ $$
 
 - [i] Perceptron Learning Rule
 $$
-\mathbf{w}_i^{(t+1)}=\mathbf{w}_i^{(t)}+\mathbf{x}_i^{(t)}\cdot e^{(t)}
+\mathbf{w}_i^{(t+1)}
+=
+\mathbf{w}_i^{(t)}
++
+e^{(t)} \cdot \mathbf{x}_i^{(t)}
 $$
 ### Step 1. Initialization.
 #### Step 1.1 Weights & Thresholds
